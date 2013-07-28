@@ -1,0 +1,16 @@
+#==========================================================================
+# Function   : box 
+# Description: Place a tab before each line 
+#==========================================================================
+function tab 
+{
+   if (( $# > 0 ))
+   then
+      echo -e "\t$*" 
+   else
+      while read line
+      do
+         echo -e "\t$line"
+      done
+   fi
+}

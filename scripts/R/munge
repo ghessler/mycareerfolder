@@ -1,0 +1,17 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : munge
+# Description     : 
+#
+# Revision History: 
+#
+#   07 Aug 2012 - Brian Patrick Marshall,,,
+#      Initial Version.
+#==========================================================================
+for dir in $(lsd | grep 2012)
+do
+   cd $dir
+      ~/bin/R/aggregateAllRuns.sh 
+   cd -
+done

@@ -1,0 +1,20 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : zcolor
+# Description     : 
+#
+# Revision History: 
+#
+#   10 Nov 2012 - Brian Patrick Marshall,,,
+#      Initial Version.
+#==========================================================================
+#!/bin/sh
+
+COLOR=`zenity --color-selection --show-palette`
+
+case $? in
+    0) echo $COLOR;;
+    1) echo "No color selected.";;
+   -1) echo "An unexpected error has occurred.";;
+esac

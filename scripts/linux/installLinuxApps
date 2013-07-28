@@ -1,0 +1,44 @@
+#! /bin/bash
+# @(#) Use apt-get to install the usual Linux Apps
+#==========================================================================
+# File            : installLinuxApps
+# Description     : 
+#
+# Revision History: 
+#
+#   01 Jul 2012 - Brian Patrick Marshall,,,
+#      Initial Version.
+#==========================================================================
+sudo apt-get update
+# sudo add-apt-repository ppa:ferramroberto/gnome3
+# sudo apt-get install gnome-shell-extensions-common
+
+#--------------------------------------------------------------------------
+# CHESS_APPS="gnugo crafty crafty-books-medium stockfish emacs-chess xboard brutalchess eboard "
+# DB_APPS="mysql-server-5.1 mysql-client-core-5.1"
+EMACS_APPS="emacs23 emacs emacs-goodies-el"
+GNOME_APPS="gnome-shell-extensions-user-theme gnome-shell-extensions-alternate-tab gnome-themes gnome-colors gnome-dust-icon-theme gnome-human-icon-theme sabily-themes light-themes gnome-themes-ubuntu gnome-themes-extras gnome-themes-more"
+GRAPHICS_APPS="graphviz "
+LINUX_APPS="tree tmux screen git mercurial tkdiff soundconverter gstreamer k3b libk3b6-extracodecs" 
+NETWORK_APPS="chromium-browser openssh-server vncviewer wireshark"
+P_APPS='ipython'
+R_APPS="r-revolution-revobase revolution-r revolution-mkl r-base r-doc-html r-doc-pdf r-recommended r-base-core"
+SECURITY_APPS="pgpgpg"
+VIM_APPS="vim vim-gnome"
+VIRTUALIZATION_APPS="virtualbox-qt"
+VNC_APPS="openvpn network-manager-openvpn openconnect vpnc network-manager-vpnc network-manager-vpnc-gnome pptpd network-manager-openconnect network-manager-openconnect-gnome"
+#--------------------------------------------------------------------------
+
+APPS="$CHESS_APPS $DB_APPS $EMACS_APPS $GNOME_APPS $GRAPHICS_APPS $LINUX_APPS $NETWORK_APPS $P_APPS $R_APPS $SECURITY_APPS $VIM_APPS $VIRTUALIZATION_APPS $VNC_APPS"
+
+for app in $APPS
+do
+   box apt-get install $app
+   yes | apt-get install $app
+done
+
+#--------------------------------------------------------------------------
+# Run 32 bit apps on a 64 bit platform, VPN, for example
+#--------------------------------------------------------------------------
+# apt-get install ia32-libs
+

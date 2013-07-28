@@ -1,0 +1,15 @@
+#! /bin/bash
+# @(#) addtodo reads a line from STDIN and adds it to the .todo file
+#==========================================================================
+# File            : addtodo
+# Description     : 
+#
+# Revision History: 
+#
+#   26 Feb 2003 - Brian Marshall
+#      Initial Version.
+#==========================================================================
+while read -p  "Enter a line: " line
+do
+	echo $line >> ~/.todo
+done

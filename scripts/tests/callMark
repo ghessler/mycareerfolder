@@ -1,0 +1,13 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : callMark
+# Description     : 
+#
+# Revision History: 
+#
+#   19 Feb 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+cid=${1:-7195999001}
+lynx --dump "http://calleridfaker.com/api/freecall/?my_phoneno_number=7193212663&phoneno_number=7192173046&cid_number=$cid&voice=normal&record=no-record&my_phoneno=7193212663&phoneno=7192173046&cid=$cid"

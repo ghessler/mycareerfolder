@@ -1,0 +1,20 @@
+# @(#) highlight - highlights the passed in data
+#============================================================
+# Function   : highlight
+# Usage      : highlight <args> or ... | highlight 
+# Description: highlights the passed in data
+#============================================================
+function highlight
+{
+   if (( $# > 0 ))
+   then
+      echo $(hlt)$*$(hltOff)
+   else
+      hlt
+      while read line
+      do
+         echo $line
+      done
+      hltOff
+   fi
+}

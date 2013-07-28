@@ -1,0 +1,29 @@
+#! /bin/bash
+# @(#) Find Java Processes
+#=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+# File            : fjp
+# Description     : Sometimes jps doesn't work!  So use this to find the
+#                   running Java processes.
+#
+# Revision History: 
+#
+#   17 Nov 2011 - 
+#      Initial Version.
+#=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+getopts :l option
+if [[ $option == l ]]
+then
+  long=true 
+fi
+
+for pid in $(ps -ef | grep -i java | grep -v grep | awk '{print $2}')
+do
+   data=$(ps auxww | grep $pid | grep -v grep)
+   
+   if [[ -n $long ]]
+   then
+     echo $data
+   else
+     echo "$pid $(echo $data | awk '{print $NF}')" 
+   fi
+done

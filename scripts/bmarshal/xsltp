@@ -1,0 +1,17 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : xsltp
+# Description     : 
+#
+# Revision History: 
+#
+#   03 Aug 2006 - Brian Marshall
+#      Initial Version.
+#==========================================================================
+xml=${1:-$(read -p "Enter xml file: " xml; echo xml)}
+xslt=${2:-$(read -p "Enter xslt file: " xslt; echo xslt)}
+output=${xml%.xml}Out.xml
+# echo java -jar /home/brian/src/java/saxon/saxon8.jar -o $output $xml $xslt
+# java -jar /home/brian/src/java/saxon/saxon8.jar $xml $xslt | tee $output
+java -jar /home/brian/src/java/saxon/saxon8.jar $xml $xslt 

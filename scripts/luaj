@@ -1,0 +1,12 @@
+#! /usr/bin/bash
+# @(#) Run a LuaJ Script
+#==========================================================================
+# File            : luaj
+# Description     : 
+#
+# Revision History: 
+#
+#   12 Apr 2013 - U-CENTRIPITAL\bmarshall
+#      Initial Version.
+#==========================================================================
+java -cp $(cygpath -aw $LUAJ_HOME/lib/luaj-jse-3.0-alpha2.jar) lua $1

@@ -1,0 +1,12 @@
+#! /bin/bash
+# @(#) Stop the Derby Server
+#==========================================================================
+# File            : stopDerbyServer
+# Description     : 
+#
+# Revision History: 
+#
+#   24 Apr 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+java -jar $DERBY_HOME/lib/derbyrun.jar server shutdown

@@ -1,0 +1,36 @@
+#! /bin/bash
+# @(#) Start Equinox's OSGI console  
+#==========================================================================
+# File            : equinox
+# Description     : 
+#
+# Revision History: 
+#
+#   17 Jan 2008 - Marshall, Brian P
+#      Initial Version.
+#==========================================================================
+#--------------------------------------------------------------------------
+# Define the EQUINOX_HOME environmental variable that contains the osgi jar
+# in its lib directory.  If this isn't defined, default to the current dir
+#--------------------------------------------------------------------------
+if [[ -z $EQUINOX_HOME ]]
+then
+   EQUINOX_HOME=.
+fi
+
+
+osgiJar=$(ls $EQUINOX_HOME/lib/org.eclipse.osgi*)
+#--------------------------------------------------------------------------
+# Define the classpath.  If the OS is Cygwin, change the path to a windows
+# path
+#--------------------------------------------------------------------------
+cp=$osgiJar
+
+if [[ $(uname -o) == "Cygwin" ]]
+then
+   cp=$(cygpath -awp $cp)
+fi
+
+echo java -jar "$cp" -console 
+java -jar "$cp" -console
+

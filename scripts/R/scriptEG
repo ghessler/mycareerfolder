@@ -1,0 +1,28 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : example 
+# Description     : 
+#
+# Revision History: 
+#
+#   30 Nov 2011 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+#==========================================================================
+# Function   : StartR 
+# Usage      : $(StartR) R code EndR 
+#==========================================================================
+function StartR 
+{
+   echo 'R --quiet --no-save --vanilla --slave'
+}
+
+$(StartR) <<-"EndR"
+   options(width=300)
+   df <- read.table('allRuns.out', header=T)
+
+   cat("Mean & Std Dev Msgs/Sec per Run\n")
+   print(tapply(df$Recv.Sec, list(df$Run), mean))
+   print(tapply(df$Recv.Sec, list(df$Run), sd), header=F)
+EndR

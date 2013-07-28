@@ -1,0 +1,12 @@
+#! /bin/bash
+# @(#) Start the Derby Server
+#==========================================================================
+# File            : startDerbyServer
+# Description     : 
+#
+# Revision History: 
+#
+#   24 Apr 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+java -jar $DERBY_HOME/lib/derbyrun.jar server start

@@ -1,0 +1,29 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : ettercapTests
+# Description     : 
+#
+# Revision History: 
+#
+#   22 Feb 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+#--------------------------------------------------------------------------
+# -T -> text 
+# -M <mode> 
+# -i <eth0>
+# -Q -> quite mode  doesn't display all to screen but does to the output file.
+# -q -> like -Q but not as quiet
+# /host1/ /host2/  traffic between those two hosts
+# // //   shows all traffic
+# -w <outputFile>
+# quit ettercap by typing 'q'
+#--------------------------------------------------------------------------
+sudo ettercap -T -M arp -i eth0 /192.168.1.8/ /192.168.1.1/
+sudo ettercap -T -M arp -i eth0 // // -w test.cap
+
+#--------------------------------------------------------------------------
+# -a -> treat the binary file as an ascii file
+#--------------------------------------------------------------------------
+grep -a http test.cap

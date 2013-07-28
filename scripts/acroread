@@ -1,0 +1,15 @@
+#! /usr/bin/bash
+# @(#) 
+#==========================================================================
+# File            : acroread
+# Description     : 
+#
+# Revision History: 
+#
+#   30 May 2013 - U-CENTRIPITAL\bmarshall
+#      Initial Version.
+#==========================================================================
+# /c/Program\ Files\ \(x86\)/Adobe/Reader\ 10.0/Reader/AcroRd32.exe $1
+/c/Program\ Files\ \(x86\)/Adobe/Reader\ 10.0/Reader/AcroRd32.exe $(cygpath -aw $(pwd)/$1)
+
+

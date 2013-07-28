@@ -1,0 +1,95 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : createReport.pl
+# Description     :  
+#
+# Revision History: 
+#
+#   21 Nov 2011 - Brian Marshall
+#      Initial Version.
+#==========================================================================
+#==========================================================================
+# Function: lsd
+# Description: list directories
+#==========================================================================
+function lsd
+{
+   ls -l | grep ^d | awk '{print $NF}'
+}
+
+#==========================================================================
+# Function: processReportDir
+#==========================================================================
+function processReportDir
+{
+   local reportDir=$1
+   local checksummer=$2
+   local msgSize=$3
+
+   for run in $(ls $reportDir/run*)
+   do
+      echo "Process $run in $reportDir with $checksummer and $msgSize"
+      #--------------------------------------------------------------------
+      # Squirrel away the header (the 12th line).
+      #--------------------------------------------------------------------
+      sed -n '12p' $run > header
+      #--------------------------------------------------------------------
+      # Next remove the line below the header (a bunch of dashes) on line
+      # 13 then remove the first 12 lines leaving only numerical data.
+      # Then append the checksummer and the message size to each line.
+      #--------------------------------------------------------------------
+      sed -e '13d' -e '1,12d' $run | while read line
+                                     do
+                                       echo "$line $checksummer $msgSize" >> temp.out
+                                     done
+   done
+}
+
+#==========================================================================
+# Function: processRunDir
+#==========================================================================
+function processRunDir
+{
+   local dir=$1
+
+   cd $dir 
+
+   for reportDir in $(lsd)
+   do
+      #--------------------------------------------------------------------
+      # Extract the Checksummer used and the Message Size from the directory.
+      # A reportDirectory has the form R_Checksummer_MsgSize, hence we need
+      # to extract the second and third tokens of the '_' separated list.
+      # Here tokens is a list of tokens (because of the parens)
+      #--------------------------------------------------------------------
+      tokens=($(echo $reportDir | sed 's/_/ /g'))
+      checksummer=${tokens[1]}
+      msgSize=${tokens[2]}
+
+      processReportDir $reportDir $checksummer $msgSize
+   done
+
+   #-----------------------------------------------------------------------
+   # Now create a new header by appending the two words "Checksummer" and
+   # "MsgSize".  Here the two dashes are replaced by the two words echoed
+   # and the xargs removes newline chars.
+   #-----------------------------------------------------------------------
+   newHeader=$(echo "Checksummer MsgSize" | cat header - - | xargs) 
+   echo $newHeader | cat - temp.out > allSummary.out
+   rm temp.out
+   rm header
+
+   cd -
+}
+
+#==========================================================================
+#                                     MAIN
+#==========================================================================
+clear
+
+for dir in $(lsd)
+do
+   processRunDir $dir
+   echo "Finished processing <$dir>"
+done

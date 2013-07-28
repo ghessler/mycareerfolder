@@ -1,0 +1,96 @@
+#! /bin/bash
+#==========================================================================
+# File        : cremake
+# Description : Create makefile.
+#
+# Revision History: 
+#
+#   30 Jyl 2002 - Brian Marshall
+#      Initial Version.
+#==========================================================================
+#--------------------------------------------------------------------------
+# Get the filename either from the command line if specified or after 
+# prompting the user for it
+#--------------------------------------------------------------------------
+exeName=${1:-$(echo -n "Enter fileName: " 1>&2; read resp; echo $resp)}
+exeName=${exeName%.*}
+
+#--------------------------------------------------------------------------
+# Loop until exeName is not empty (-n) and (-a) a file by that name does
+# not exist (! -e)
+#--------------------------------------------------------------------------
+until [ -n "$exeName" -a ! -e Makefile ]
+do
+   #-----------------------------------------------------------------------
+	# If exeName is empty (-z for zero) the re-prompt the user and start
+	# at the top of the loop again (continue)
+   #-----------------------------------------------------------------------
+   if [ -z "$exeName" ]; then
+	   read exeName?"Enter exeName: "
+		continue
+   fi
+   #-----------------------------------------------------------------------
+	# If we get here, the file exists, so ask the user if it should be
+	# overwritten. Here the -n argument specifies 'no new line'.  
+	# getKey is a function which retrieves 1 character from the keyboard. -l
+	# specifies to convert it to lower case (-u upper).  
+	# If the user types 'y' or 'Y', break out of the until loop...
+	# Note: the [[ ]] syntax is exclusively Korn Shell. In the above if 
+	# statement single brackets are used ([ ]), which is Bourne shell syntax
+   #-----------------------------------------------------------------------
+   echo -n "Makefile exists. Overwrite (y/n)? "
+	if [[ $(getKey -l) == 'y' ]] ; then
+	   break
+   fi
+   #-----------------------------------------------------------------------
+	# ... otherwise prompt the user for another file name
+   #-----------------------------------------------------------------------
+	echo -n "\nEnter exeName: "
+   read exeName
+done
+
+#--------------------------------------------------------------------------
+# Get the user's name, which is field 5 of the /etc/passwd (GCOS). Do 
+# this by grep'ing for the user's id (id -un on Linux) or login name (LOGNAME)
+# in the /etc/passwd file and then cutting out the fifth colon delimited field
+# Linux: userName=$(grep $(id -un) /etc/passwd | cut -d: -f5)
+#--------------------------------------------------------------------------
+userName=$(grep ^$LOGNAME: /etc/passwd | cut -d: -f5)
+
+#--------------------------------------------------------------------------
+# An example of a 'here' document.  It says cat (write) to $exeName every
+# thing after the marker EOF and before that same marker.  The '-' (<<-)
+# says that leading tabs are allowed and will be stripped before writing
+# the here document to the file
+#--------------------------------------------------------------------------
+cat > Makefile <<EOF
+#==========================================================================
+# File            : makefile for $exeName
+# Description     : 
+#
+# $(date +"%d %h %Y") - $userName
+#==========================================================================
+
+OBJS = \$(addsuffix .o, \$(basename \$(wildcard *.c*)))
+
+%.o : %.cpp
+	\$(CXX) -c -g -fno-default-inline -I\$(ACE_ROOT) \$< -o \$@
+
+$exeName :  \${OBJS}
+	@echo "Building \$@ from \$(@:.o=.c) in \$(CURDIR)"
+	\$(CXX) -g -fno-default-inline -L \${ACE_ROOT} -L\$(ACE_ROOT)/ace -lACE -o \$@ \$<
+
+%.d : %.c
+	\$(SHELL) -ec '\$(CXX) -M \$(CPPFLAGS) \$< \\
+					 | sed '\''s/\(\$*\)\.o[ :]*/\1.o \$@ : /g'\'' >\$@; \\
+					 [ -s \$@ ] || rm -f \$@'
+EOF
+
+#--------------------------------------------------------------------------
+# 'vi +11 exeName' means vi exeName and place the cursor on line 11.
+# We want to place the cursor on the last line of exeName so that the user
+# can immediately start editing the script, so first calculate the number
+# of lines in the file: line=$(wc -l $exeName | awk '{print $1}').  Then
+# overlay vi : exec vi +$line $exeName.  These two steps can be combined:
+#--------------------------------------------------------------------------
+# exec vi +$(wc -l Makefile | awk '{print $1}') Makefile

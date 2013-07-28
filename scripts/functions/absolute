@@ -1,0 +1,22 @@
+# @(#) Make all files in a directory absolute
+#============================================================
+# Function   : absolute 
+# Usage      : absolute <dir>
+# Description: Make all files in a directory absolute
+#============================================================
+function absolute
+{
+   local dirs=$*
+
+   for dir in $dirs
+   do
+      cd $dir
+      path=$(pwd)
+      ls  | while read line
+            do
+               echo "$path/$line"
+            done
+      cd -
+   done
+}
+

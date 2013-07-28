@@ -1,0 +1,68 @@
+#!  /usr/bin/perl
+##########################################################################
+# File        : crepm
+# Description : Create Perl Package.  Prompt for a packageName if one isn't 
+#               specified on the command line.  Check if a file containing
+#               the package exists. Add the basic lines to the script.
+#
+# Revision History: 
+#
+# 10 Aug 1999 - Brian Marshall
+#    Initial Version.
+##########################################################################
+$packageName = getpackageName( shift );
+$fileName    = $packageName . ".pm";
+chomp($date  = `date +"%d %h %Y"`);
+$hashLine    = "#" x 75;
+
+open(FILE, ">$fileName") || die($!);
+
+print FILE <<EOT;
+package $packageName;
+$hashLine
+# File        : $fileName
+# Description : 
+#
+# Revision History: 
+#
+# $date - Brian Marshall
+#    Initial Version.
+$hashLine
+use strict;
+use Carp;
+
+
+1;
+EOT
+
+close(FILE);
+
+chmod 0755, $fileName;
+system( "vi +13  $fileName");
+
+sub getpackageName
+   { 
+   my($packageName) = shift;
+
+   while( 1 )
+      {
+      if( ! $packageName )
+         {
+         print "Enter packageName: ";
+         chomp( $packageName = <STDIN> );
+         }
+
+      last if ! -e "$packageName.pm";
+
+      print "File -> $packageName <- exists.  Overwrite? ";
+      if( <STDIN> =~ /^y/i )
+         {
+         last;
+         }
+      else
+         {
+         $packageName = "";
+         }
+      }
+   return $packageName;
+   }

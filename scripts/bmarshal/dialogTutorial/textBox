@@ -1,0 +1,12 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : textBox
+# Description     : 
+#
+# Revision History: 
+#
+#   15 Jan 2010 - Brian Marshall,,,,
+#      Initial Version.
+#==========================================================================
+dialog --textbox ~/.bash_profile 40 80

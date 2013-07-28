@@ -1,0 +1,12 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : zquestion
+# Description     : 
+#
+# Revision History: 
+#
+#   15 Jun 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+zenity --question --text="$*"

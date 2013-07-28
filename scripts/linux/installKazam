@@ -1,0 +1,14 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : installKazam
+# Description     : 
+#
+# Revision History: 
+#
+#   13 Oct 2012 - Brian Patrick Marshall,,,
+#      Initial Version.
+#==========================================================================
+sudo add-apt-repository ppa:kazam-team/stable-series
+sudo apt-get update
+sudo apt-get install kazam

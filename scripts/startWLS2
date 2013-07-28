@@ -1,0 +1,12 @@
+#! /bin/bash
+# @(#) Jog my memory on Permspace setting
+#==========================================================================
+# File            : startWLS2
+# Description     : 
+#
+# Revision History: 
+#
+#   12 Jun 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+java -XX:MaxPermSize=512M -Xmx1024M weblogic.Server

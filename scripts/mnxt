@@ -1,0 +1,48 @@
+#! /usr/bin/bash
+# @(#) Multiple nxt-s
+#==========================================================================
+# File            : mnxt
+# Description     : 
+#
+# Revision History: 
+#
+#   30 Jun 2013 - U-CENTRIPITAL\bmarshall
+#      Initial Version.
+#==========================================================================
+while getopts :p option
+do
+   case $option in
+      \?) echo "Invalid option $OPTARG. Bailing"
+          exit;;
+       p) promptToContinue=true;;
+   esac
+done
+
+colors=$(<~/.hidden/.goodBGColors)
+
+smallsize="80x12+3330+%d"
+smallYOffsets=(0 230 430 630)
+normalsize="80x24+1410+%d"
+normalYOffsets=(0 385 740)
+i=0
+for color in $colors 
+do
+   if (( i < 4 ))
+   then
+     geometryString="-g $(printf $smallsize $((${smallYOffsets[$i]})))"
+   elif (( i < 8 ))
+   then
+     geometryString="-g $(printf $normalsize $((${normalYOffsets[$((i-4))]} )))"
+   else
+     geometryString=""
+   fi
+
+   echo nxt -f "$color" $geometryString
+   nxt -f "$color" $geometryString -t "$color"
+   : $(( i += 1 ))
+
+   if [[ $promptToContinue == true ]]
+   then
+      promptToContinue "BG=$color"
+   fi
+done

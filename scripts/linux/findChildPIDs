@@ -1,0 +1,13 @@
+#! /bin/bash
+# @(#) Pass in Parent's PID and get back all children PIDs
+#==========================================================================
+# File            : findChildPIDs
+# Description     : 
+#
+# Revision History: 
+#
+#   17 Jun 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+ppid=${1:?"Usage: $0 <ppid>"}
+ps -o pid --no-headers --ppid=$ppid

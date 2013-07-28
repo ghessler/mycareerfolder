@@ -1,0 +1,47 @@
+#==========================================================================
+# Function: waitForIdleCPU 
+#==========================================================================
+function waitForIdleCPU
+{
+   local idlePercentage=${1:-95}
+   local count=0
+   #-----------------------------------------------------------------------
+   # Get the header of vmstat in order to locate the position of the idle
+   # column ...
+   #-----------------------------------------------------------------------
+   header=$(vmstat 1 1 | tail -n +2 | head -n +1)
+   #-----------------------------------------------------------------------
+   # ... and now find the index of the idle column.  Note that that index
+   # is $(NF - 1) on some systems and $(NF - 2) on other systems.
+   # So what's going on here?  Well, xargs is the same as "xargs echo", which
+   # remove duplicate spaces.  Then the 'tr' command replaces each space with
+   # a newline, turning the row into a column and 'nl' numbers each row.
+   #-----------------------------------------------------------------------
+   idIndex=$(echo $header | xargs | tr ' ' '\n' | nl | grep id | awk '{print $1}')
+   vmstat -n 5 | while read line
+              do
+                  #--------------------------------------------------------
+                  # The idle column is sometimes the penultimate column 
+                  # $(NF - 1), sometimes the 3rd to the last column, $(NF - 2).
+                  # So, just use the calculated value $idIndex.  The first
+                  # time around, though, its value is 'id', which isn't 
+                  # numeric, clearly, so skip it.
+                  #--------------------------------------------------------
+                  idle=$(echo $line | awk "{print \$$idIndex}")
+                  if ! isNumeric $idle
+                  then
+                     continue
+                  fi
+                  if (( idle > $idlePercentage ))
+                  then
+                     (( count += 1 ))
+                     if (( count > 3 ))
+                     then
+                        #--------------------------------------------------
+                        # The system has been over $idlePercentage idle for 15 seconds
+                        #--------------------------------------------------
+                        break
+                     fi
+                  fi
+               done
+}

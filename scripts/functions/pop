@@ -1,0 +1,11 @@
+# @(#) pop off the first word from a passed in space separated list
+#============================================================
+# Function:    pop 
+# Usage   :    pop <list>
+# Description: Pops off the first word of a space separated list
+#============================================================
+function pop
+{
+   echo $* | sed 's/ .*//'
+   # echo ${*%% *}
+}

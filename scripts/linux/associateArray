@@ -1,0 +1,19 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : associateArray
+# Description     : 
+#
+# Revision History: 
+#
+#   17 Jun 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+declare -A hash
+
+# hash=(['one'] = 'uno', ['two'] = 'due')
+hash=(['one']='uno' [two]='due')
+
+echo "one = ${hash['one']}"
+echo "Keys  : ${!hash[*]}
+echo "Values: ${hash[*]}

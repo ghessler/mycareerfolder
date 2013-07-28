@@ -1,0 +1,149 @@
+#! /bin/bash
+# @(#) Install Glassfish
+#==========================================================================
+# File            : installGlassfish
+# Description     : Create an MQ5.0 Eclipse project by 
+#                     1. Modifying Maven's settings.xml to include proxy info
+#                     2. cloning the repo
+#                     3. running some Maven commands
+#                   This script just captures some of the facts from the Wiki
+# https://stbeehive.oracle.com/teamcollab/wiki/Oracle+Messaging:mqideinstructions
+#
+# Revision History: 
+#
+#   23 Mar 2012 - Brian Marshall (719) 321-2663 for questions or improvements.
+#      Initial Version.
+#==========================================================================
+#==========================================================================
+# Function   : initCap 
+# Usage      : initCap <string>
+# Description: Capitalizes the first character of string
+#==========================================================================
+function initCap
+{
+   echo $(expr "$1" : '\(.\)' | tr [a-z] [A-Z])$(expr "$1" : '.\(.*\)')
+}
+
+#==========================================================================
+# Function   : createMercurialIniFile 
+#==========================================================================
+function createMercurialIniFile
+{
+   if [[ ! -e ~/Mercurial.ini ]]
+   then
+      read -p "Enter your Oracle email address: " emailAddress
+      name=$(echo $emailAddress | cut -d@ -f1)
+      firstName=$(echo $name | cut -d. -f1)
+      lastName=$(echo $name | cut -d. -f2)
+cat <<-EOF > ~/Mercurial.ini
+[ui]
+username = $(initCap $firstName) $(initCap $lastName)<$emailAddress>
+
+[trusted]
+users = *
+groups = *
+EOF
+   fi
+}
+
+#==========================================================================
+# Function   : modifyMavenSettings 
+#==========================================================================
+function modifyMavenSettings 
+{
+   if [[ ! -e ~/.m2 ]]
+   then
+      echo "Please install Maven before proceeding"
+      exit 1
+   elif ! grep adc-proxy.oracle.com ~/.m2/settings.xml > /dev/null
+   then
+      read -p "Shall the oracle proxy be added to settings.xml? " reply
+      if [[ $reply == [yY]* ]]
+      then
+         #-----------------------------------------------------------------
+         # Backup the settings.xml file to settings.xml.BACKUP.
+         #-----------------------------------------------------------------
+         cp ~/.m2/settings.xml{,.BACKUP}
+         if ! grep '<proxies>' ~/.m2/settings.xml
+         then
+            #--------------------------------------------------------------
+            # There is no <proxies> element in settings.xml so add one 
+            # underneath the <pluginGroups> element.
+            #--------------------------------------------------------------
+            sed -i '/<\/pluginGroups>/ a\
+\
+     <proxies>\
+       <proxy>\
+         <id>optional</id>\
+         <active>true</active>\
+         <protocol>http</protocol>\
+         <host>adc-proxy.oracle.com</host>\
+         <port>80</port>\
+         <nonProxyHosts>adc4120307|*.oracle.com|*.oracleads.com|*.us.oracle.com|\
+                          *.uk.oracle.com|*.ca.oracle.com|*.oraclecorp.com|\
+                          *.oracleportal.com\
+         </nonProxyHosts>\
+       </proxy>\
+     </proxies>' ~/.m2/settings.xml
+         else
+            #--------------------------------------------------------------
+            # There is a <proxies> element in settings.xml so add a <proxy> 
+            # underneath it. 
+            #--------------------------------------------------------------
+            sed -i '/<proxies>/ a\
+       <proxy>\
+         <id>optional</id>\
+         <active>true</active>\
+         <protocol>http</protocol>\
+         <host>adc-proxy.oracle.com</host>\
+         <port>80</port>\
+         <nonProxyHosts>adc4120307|*.oracle.com|*.oracleads.com|*.us.oracle.com|\
+                          *.uk.oracle.com|*.ca.oracle.com|*.oraclecorp.com|\
+                          *.oracleportal.com\
+         </nonProxyHosts>\
+       </proxy>\' ~/.m2/settings.xml
+         fi
+      fi
+   fi
+}
+
+#=================================  MAIN  =================================
+#--------------------------------------------------------------------------
+# Create the Mercurial.ini file if it doesn't already exist in the user's
+# home directory.
+#--------------------------------------------------------------------------
+createMercurialIniFile
+
+#--------------------------------------------------------------------------
+# Export the variables as specified in the Wiki.  I bet we don't need the
+# EDITOR variable.
+#--------------------------------------------------------------------------
+export PATH=$PATH:/net/jpgserv.red.iplanet.com/export/jmq/tools/hg/latest/bin
+export EDITOR=vi
+export https_proxy=www-proxy.us.oracle.com:80
+
+#--------------------------------------------------------------------------
+# Add Oracle proxy to the Maven settings if not already present.
+#--------------------------------------------------------------------------
+modifyMavenSettings
+
+#--------------------------------------------------------------------------
+# Clone the MQ5.0 repo.
+#--------------------------------------------------------------------------
+echo ">>> Cloning MQ5.0 repository.  This takes a while ..."
+hg clone ssh://bmarshal@mercurial.us.oracle.com:22//m/mq/MQ5.0
+
+#--------------------------------------------------------------------------
+# Run the Maven goals:
+#    mvn install
+#    mvn eclipse:eclipse
+#    mvn -Declipse.workspace=$workspace eclipse:add-maven-repo
+# as per Wiki.
+#--------------------------------------------------------------------------
+cd MQ5.0
+echo ">>> Running mvn install.  Please hold"
+mvn install
+echo ">>> Running mvn eclipse:eclipse.  Please hold"
+mvn eclipse:eclipse
+read -p "Enter the name of the GF Workspace to create: " workspace
+mvn -Declipse.workspace=$workspace eclipse:add-maven-repo

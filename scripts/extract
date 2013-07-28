@@ -1,0 +1,20 @@
+#! /bin/bash
+# @(#) wraps tar xvf to extract the files matching passed in regex
+#==========================================================================
+# File            : extract 
+# Description     : extract those files from a tar file that match a passed
+#                   in pattern
+# Usage           : extract <tarFile> <pattern>
+# Revision History: 
+#
+#   26 Feb 2003 - Brian Marshall
+#      Initial Version.
+#==========================================================================
+tarFile=${1:?Usage: $0 <tarFile> <pattern>}
+patt=${2:?Usage: $0 <tarFile> <pattern>}
+
+filesToExtract=$(tar tvf $tarFile | awk '{print $NF}' | grep "$patt")
+if [[ -n $filesToExtract ]]
+then
+   tar xvf $tarFile $filesToExtract
+fi

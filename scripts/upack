@@ -1,0 +1,12 @@
+#! /bin/bash
+#==========================================================================
+# File            : upack
+# Description     : unpacks a zipped tar file 
+#
+# Revision History: 
+#
+#   16 May 2001 - Brian P Marshall
+#      Initial Version.
+#==========================================================================
+fileName=${1:-$(read -p "Enter file to unpack: "; echo $REPLY)}
+cat $file | gzip -d | tar -xvf -

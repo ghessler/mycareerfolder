@@ -1,0 +1,10 @@
+# @(#) bld reads STDIN and bolds the passed in string
+#============================================================
+# Function:    bld (bold)
+# Usage   :    bold <string>
+# Description: bld reads STDIN and bolds the passed in string
+#============================================================
+function bld
+{
+   sed "s|\($1\)|$(bold)\1$(boldOff)|g"
+} 

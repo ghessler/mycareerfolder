@@ -1,0 +1,29 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : convertDateToEpoch
+# Description     : 
+#
+# Revision History: 
+#
+#   17 Jun 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+#---------------------------------------------------------------------------
+# Weekday	%a (for example:. Sat)
+# %A (for example: Saturday)
+# Month	%b (for example: Nov)
+# %B (for example: November)
+# Day	%d (for example: 31)
+# Date in format (mm/dd/yy) %D (for example: 10/18/10)
+# Year	%y (for example: 10)
+# %Y (for example: 2010)
+# Hour	%I or %H (for example: 08)
+# Minute	%M (for example: 33)
+# Second	%S (for example: 10)
+# Nano second	%N (for example:695208515)
+# epoch UNIX time in seconds %s (for example: 1290049486)
+#---------------------------------------------------------------------------
+date=$(date)
+echo "Unix Epoch associated with $date is $(date --date "$date" +%s)"
+echo "Week day associated with $date is $(date --date "$date" +%A)"

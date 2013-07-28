@@ -1,0 +1,10 @@
+# @(#) escSpaces string escapes all spaces in string
+#============================================================
+# Function   : escSpaces
+# Usage      : escSpaces <string>
+# Description: escapes all spaces in string
+#============================================================
+function escSpaces
+{
+   echo "$1" | sed 's| |\\ |g'
+}

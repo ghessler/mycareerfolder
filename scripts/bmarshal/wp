@@ -1,0 +1,35 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : vp
+# Description     : 
+#
+# Revision History: 
+#
+#   12 Nov 2005 - 
+#      Initial Version.
+#==========================================================================
+# start=${${2:+$1}:-1}
+start=${2:+$1}
+start=${start:-1}
+end=${2:-${1:-1}}
+
+if(( $# == 0 ))
+then
+   start=1
+   end=$(ls  | grep -i '\.jpg' | wc -l)
+fi
+
+trap 'exit' 2
+
+for f in $(ls -ltr | tail -n +2 | grep -v '^d' |  awk '{print $NF}' | sed -n "$start,${end}p")
+do
+  # xview $f
+  xzgv $f
+  read -p "move? " -n 1
+  if [[ $REPLY == [yY] ]]
+  then
+     mv $f jeffLaw
+  fi
+  # xv $f
+done

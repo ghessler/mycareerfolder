@@ -1,0 +1,335 @@
+#! /bin/bash
+#==========================================================================
+# File            : createMakefile
+# Description     : 
+# Example         : createMakefile -I../inc -I../../inc -I../../cpv 
+#                   I$NC3_TESTDRIVERSRC/inc -I${NC3_IOCSRC}inc -L/usr/lib 
+#                   -L./ -ltdriver -losioc
+#
+# Revision History: 
+#
+#   18 Oct 2002 - Brian Marshall (720-479-1511)
+#      Initial Version.
+#==========================================================================
+#======================================================================
+# Function:    printHeader
+# Description: Print a makefile's header.
+#======================================================================
+function printHeader
+{
+   local PROJECT=$1
+   cat <<-EOH
+	#=======================================================================
+	# File        : makefile 
+	# Description : Recursive makefile for directory $PROJECT
+	#
+	# $(date +"%d %h %Y") - $LOGNAME 
+	#=======================================================================
+	EOH
+}
+
+
+#======================================================================
+# Function:    printCCLine
+# Description: Print a CC line to the makefile.  Here we are highlighting
+#              some text using tput smso and un-highlighting by using
+#              tput rmso.
+#======================================================================
+function printCCLine
+{
+   local type=${1#*.}
+   echo "	@echo \$(shell tput smso)Creating \$@\$(shell tput rmso) from \$<: dependencies \$? are newer than \$@"
+	if [[ $type == c ]]
+	then
+      echo '	$(CC) -c $(CFLAGS) $(ALL_INCLUDES) $<'
+	else
+      echo '	$(CXX) -c $(CFLAGS) $(ALL_INCLUDES) $<'
+	fi
+   echo
+}
+
+
+#======================================================================
+# Function:    printTargetBody
+# Description: Print the code to build a target.  Branch if a library 
+#              or an executable is being built
+#======================================================================
+function printTargetBody
+{
+   local PROJECT=$1
+
+   if [[ $PROJECT == *.so  ]]
+   then
+      #----------------------------------------------------------------
+      # Body of a shared library 
+      #----------------------------------------------------------------
+      echo "\$(CXX) -shared -o $PROJECT \$?"
+   elif [[ $PROJECT == *.a ]]
+   then
+      #----------------------------------------------------------------
+      # Body of a static library 
+      #----------------------------------------------------------------
+      echo "\$(MAKELIB) $PROJECT \$?"
+   else   
+      #----------------------------------------------------------------
+      # Body of an executable
+      #----------------------------------------------------------------
+      echo '$(CXX) -o $@ $(CFLAGS) $(ALL_INCLUDES) $(ALL_LIBPATH) $(ALL_LIBS) $^'
+   fi
+}
+
+
+#======================================================================
+# Function   : printDependencies 
+# Description: This function calculates a c (cpp, cpv) file's dependencies.
+#              It depends on the ALL_INCLUDES macro in makefile.common.
+#              If the g++ command fails, have the .o depend on the .c
+#======================================================================
+function printDependencies 
+{
+   local cFile=${1:-$(return)}
+   local depFiles=$(g++ -MM $MY_INCLUDES $cFile | sed 's/\\/ /')
+   echo ${depFiles:-${cFile%.*}.o: $cFile}
+}
+
+
+#======================================================================
+# Function:    makeMakefile
+# Description: Creates a makefile to create an executable or a library
+#              calls make in each of its subdirectories (and nothing
+#              else)
+#======================================================================
+function makeMakefile
+{
+   local PROJECT=$1
+   #-----------------------------------------------------------------------
+   # create makefile
+   #-----------------------------------------------------------------------
+   cat > makefile << EOF
+$(printHeader $PROJECT)
+SHELL = /bin/bash
+
+# my locals
+include make.inc
+
+# my masters
+ALL_LIBS     = \$(MY_LIBS)
+ALL_INCLUDES = \$(MY_INCLUDES)
+ALL_LIBPATH  = \$(MY_LIBPATH)
+
+CFILES       = \$(wildcard *.c *.cc *.cpp)
+OBJS         = \$(addsuffix .o, \$(basename \$(wildcard *.c *.cc *.cpp)))
+VPATH        = 
+CFLAGS      += \$(MY_CFLAGS)
+LDFLAGS     += \$(MY_LDFLAGS)
+
+.PHONY: all mark sanity compile clean stable
+
+%.o: %.cpp 
+	@echo \$(shell tput smso)Creating \$@\$(shell tput rmso) from \$<: dependencies \$? are newer than \$@
+	\$(CXX) -c \$(CFLAGS) \$(ALL_INCLUDES) \$<
+%.o: %.cc 
+	@echo \$(shell tput smso)Creating \$@\$(shell tput rmso) from \$<: dependencies \$? are newer than \$@
+	\$(CXX) -c \$(CFLAGS) \$(ALL_INCLUDES) \$<
+%.o: %.c
+	@echo \$(shell tput smso)Creating \$@\$(shell tput rmso) from \$<: dependencies \$? are newer than \$@
+	\$(CC) -c \$(CFLAGS) \$(ALL_INCLUDES) \$<
+
+all: sanity compile $PROJECT
+	
+mark: 
+	@echo ----------------------------------------------------------------
+
+sanity:
+	@echo "----------------------------------------------------------------"
+	@echo "Operating with the following variables:                         "
+	@echo "CFILES       = \$(CFILES)                                       "
+	@echo "OBJS         = \$(OBJS)                                         "
+	@echo "VPATH        = \$(VPATH)                                        "
+	@echo "CFLAGS       = \$(CFLAGS)                                       "
+	@echo "LDFLAGS      = \$(LDFLAGS)                                      "
+	@echo "ALL_INCLUDES = \$(ALL_INCLUDES)                                 "
+	@echo "ALL_LIBS     = \$(ALL_LIBS)                                     "
+	@echo "ALL_LIBPATH  = \$(ALL_LIBPATH)                                  "
+	@echo "----------------------------------------------------------------"
+
+compile: \${OBJS} mark;
+	
+$PROJECT:  \${OBJS}
+	@echo "\$(shell tput smso)Building \$@\$(shell tput rmso) from \$^ in \$(CURDIR)"
+	$(printTargetBody $PROJECT)
+
+clean:
+	@echo "\$(shell tput smso)CLEANING\$(shell tput rmso) \$(OBJS) in \$(CURDIR)"
+	-@rm *.o
+	-@rm $PROJECT
+
+stable:
+	@echo "\$(shell tput smso)STABILIZING\$(shell tput rmso) \$(OBJS) in \$(CURDIR)"
+	\${MAKE} clean
+	\${MAKE} all
+
+$(for cFile in *.c *.cc *.cpp
+  do 
+	  echo $(printDependencies $cFile)
+	  printCCLine $cFile
+done
+)
+EOF
+
+if [[ ! -e make.inc ]]
+then
+   cat << EOF > make.inc
+#=======================================================================
+# File        : make.inc 
+# Description : Tailored flags for $PROJECT.  This file is included by
+#               makefile and will not be overwritten if by the makeMaker.
+#               Put project specific details in this file.
+#
+# $(date +"%d %h %Y") - $(grep ^$LOGNAME: /etc/passwd | cut -d: -f5)
+#=======================================================================
+MY_INCLUDES = $MY_INCLUDES
+MY_LIBS     = $MY_LIBS
+MY_LIBPATH  = $MY_LIBPATH
+MY_CFLAGS   = $([[ $PROJECT == *.so ]] && echo -fPIC -O3 -shared)
+MY_LDFLAGS  = $MY_LDFLAGS
+EOF
+else
+   echo $(tput smso)Not overwriting make.inc$(tput rmso)
+fi
+
+echo "$(tput smso)makefile created in $(pwd) for $PROJECT$(tput rmso)"
+}
+
+
+#======================================================================
+# Function:    makeRecursiveMakefile
+# Description: Create a recursive makefile, i.e. one which recursively
+#              calls make in each of its subdirectories (and nothing
+#              else)
+#======================================================================
+function makeRecursiveMakefile
+{
+   local PROJECT=$(basename $(pwd))
+
+   cat > makefile << EOF
+$(printHeader $PROJECT)
+SHELL = /bin/bash
+
+noParams:
+	@echo Usage: make target
+	@exit 1
+
+%:
+	@for f in \$(shell ls -ltr | grep '^d' | awk '{print \$\$NF}'); do \\
+		cd \$\$f; \\
+		\${MAKE} \$@; \\
+		cd ..;\\
+	done
+EOF
+   echo "$(tput smso)makefile created in $(pwd) for $PROJECT$(tput rmso)"
+}
+
+
+#======================================================================
+# Function:    makeExeMakefile
+# Description: Create a makefile which generates an executable
+#======================================================================
+function makeExeMakefile
+{
+   fileName=$(egrep -l '[ \t]+main[ \t]*\(.*\)' *.c* | grep -v '//.*main' 2>/dev/null)
+   makeMakefile ${fileName%.*}
+}
+
+
+#======================================================================
+# Function:    makeLibMakefile
+# Description: Create a makefile which generates a library
+#======================================================================
+function makeLibMakefile
+{
+   if [[ $libType == 'dynamic' ]]
+   then
+      makeMakefile "lib$(basename $(pwd)).so"
+   else
+      makeMakefile "lib$(basename $(pwd)).a"
+   fi
+}
+
+
+#======================================================================
+#                            MAIN
+#======================================================================
+#-----------------------------------------------------------------------
+# For directories in which no *.cpp files have a main() function, 
+# libType is set to dynamic, indicating that a shared library should be
+# created.  This can be overriden by using the -s option indicating
+# a static library should be generated.
+# This script takes options -l <libName> -L <libPathName -I <include> as
+# well.  These options need be specified once, since they are written
+# to the file make.inc, which this script doesn't overwrite.
+#-----------------------------------------------------------------------
+libType=dynamic
+#-----------------------------------------------------------------------
+# Read flags from make.inc if that file exists
+#-----------------------------------------------------------------------
+if [[ -e make.inc ]]
+then
+   eval $(
+   for f in $(grep MY make.inc )
+   do
+         echo $f
+      done | xargs | sed 's/\([^=]\) \([^=]\)/\1; \2/g' | sed 's/ //g')
+fi
+
+while getopts :sc:d:l:L:I: option
+do
+   case $option in
+      s)  libType=static ;;
+      c)  MY_CFLAGS="$MY_CFLAGS $OPTARG" ;;
+      d)  MY_LDFLAGS="$MY_LDFLAGS $OPTARG" ;;
+      l)  MY_LIBS="$MY_LIBS -l$OPTARG" ;;
+      L)  MY_LIBPATH="$MY_LIBPATH -L$OPTARG" ;;
+      I)  MY_INCLUDES="$MY_INCLUDES -I$OPTARG" ;;
+      *)  echo -n "Usage: $(basename $0) -l <libName> -L <libdirName> "
+          echo " -I <incdirName> -c <compileFlags> -d <linkerFlags>"
+          exit ;;
+   esac
+done
+
+#-----------------------------------------------------------------------
+# Strip the leading space
+#-----------------------------------------------------------------------
+# MY_LIBS=${MY_LIBS# }
+# MY_CFLAGS=${MY_CFLAGS# }
+# MY_LDFLAGS=${MY_LDFLAGS# }
+# MY_LIBPATH=${MY_LIBPATH# }
+# MY_INCLUDES=${MY_INCLUDES# }
+
+echo MY_LIBS = $MY_LIBS
+echo MY_CFLAGS = $MY_CFLAGS
+echo MY_LDFLAGS = $MY_LDFLAGS
+echo MY_LIBPATH = $MY_LIBPATH
+echo MY_INCLUDES = $MY_INCLUDES
+
+#-----------------------------------------------------------------------
+# Create a recursive makefile (one which calls make for each of its 
+# subdirectories) if there are no cpp files in the current directory
+#-----------------------------------------------------------------------
+if (( $(ls *.c *.cpp 2> /dev/null | wc -l) == 0 ))
+then
+   makeRecursiveMakefile
+elif egrep '[ \t]+main[ \t]*\(.*\)' *.c* | grep -v '//.*main'> /dev/null 2>&1
+then
+   #-----------------------------------------------------------------
+   # There are cpp files in the current directory and one of them has
+   # a main() function, so build a makefile for an executable
+   #-----------------------------------------------------------------
+   makeExeMakefile
+else
+   #-----------------------------------------------------------------
+   # None of the cpp files has a main() function.  So build a makefile
+   # for a library
+   #-----------------------------------------------------------------
+   makeLibMakefile          
+fi

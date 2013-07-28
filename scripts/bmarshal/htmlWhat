@@ -1,0 +1,23 @@
+#! /bin/bash
+# @(#) creates an entry for my homepage for each function in ~/bin/functions
+#==========================================================================
+# File            : htmlWhat
+# Description     : 
+#
+# Revision History: 
+#
+#   04 Mar 2003 - Brian Marshall
+#      Initial Version.
+#==========================================================================
+cd ${1:-~/bin/functions}
+for f in *
+do
+   comment=$(what $f | sed 's/^.*://' | sws)
+   if [[ -n $comment ]]
+   then
+      comment=$(echo $comment | awk '{print "<i>", $1, "</i>"; for(i=2; i <= NF; ++i) { print $i }}')
+      echo "<a href=\"$(pwd)/$f\">$f</a><br>"
+      echo $comment
+      echo "<p>"
+   fi
+done

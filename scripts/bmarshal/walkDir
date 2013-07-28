@@ -1,0 +1,22 @@
+#! /bin/bash
+# @(#) Synopsis:  walkDir <startDir> <script>
+#==========================================================================
+# File            : walkDir
+# Description     : 
+#
+# Revision History: 
+#
+#   10 Jan 2003 - Brian Marshall
+#      Initial Version.
+#==========================================================================
+startDir=${1:?"Usage: $0 <startDirectory> <scriptName>"}
+script=${2:?"Usage: $0 <startDirectory> <scriptName>"}
+#--------------------------------------------------------------------------
+#  Execute the script $script in each directory
+#--------------------------------------------------------------------------
+for dir in $(find $startDir -type d)
+do
+   cd $dir
+   eval $script 
+   cd -
+done

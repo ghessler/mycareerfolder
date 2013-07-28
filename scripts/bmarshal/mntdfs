@@ -1,0 +1,12 @@
+#! /bin/bash
+# @(#) Mount DFS
+#==========================================================================
+# File            : mntdfs
+# Description     : 
+#
+# Revision History: 
+#
+#   20 Aug 2010 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+sudo mount -t cifs //mdnt.com/dfs /media/dfs -o user=marshabp,password='!2Mar1991'

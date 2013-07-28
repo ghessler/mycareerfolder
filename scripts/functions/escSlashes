@@ -1,0 +1,10 @@
+# @(#) escSlashes string escapes all slashes in string
+#============================================================
+# Function   : escSlashes 
+# Usage      : escSlashes <string>
+# Description: escapes all slashes in string
+#============================================================
+function escSlashes
+{
+   echo "$1" | sed 's|/|\\/|g'
+}

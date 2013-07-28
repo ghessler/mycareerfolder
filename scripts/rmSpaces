@@ -1,0 +1,15 @@
+#! /bin/bash
+# @(#) Replace spaces with underscores from filenames
+#==========================================================================
+# File            : rmSpaces
+# Description     : 
+#
+# Revision History: 
+#
+#   19 May 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+for f in *
+do
+   mv "$f" $(echo $f | sed s/ /_/g)
+done

@@ -1,0 +1,22 @@
+#! /bin/bash
+# @(#) Echo the color associated with red 
+#==========================================================================
+# File            : red
+# Description     : 
+#
+# Revision History: 
+#
+#   19 Feb 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+if (( $* > 0 ))
+then
+   echo $* | red
+else
+   echo -e "\e[00;42m"
+   while read line
+   do
+      echo $line
+   done
+   echo -e "\e[00"
+fi

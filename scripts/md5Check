@@ -1,0 +1,40 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : md5Check
+# Description     : md5Sum is a utility that returns a checksum on a file.
+#                   It is invoked like this:  md5Sum <fileName> 
+#                   Many public sites from which files can be downloaded offer
+#                   md5Sums for the files.  By running md5sum on the downloaded
+#                   file and comparing the result with the contents of the
+#                   downloaded md5 file, one can be confident that the file
+#                   hasn't been tampered with.
+#                   This program assumes that for each file f, there is a file
+#                   named f.md5 which contains the md5sum check of f.
+#
+# Revision History: 
+#
+#   22 Nov 2003 - Brian Marshall
+#      Initial Version.
+#==========================================================================
+
+#--------------------------------------------------------------------------
+# For each file passed in as a parameter, there has to be a file with the 
+# identical name but with an extension of md5.  
+# Walk the list of passed in file names.  Execute an md5sum on the passed
+# in file, myFile, say,  and compare the output of md5sum with the contents of
+# myFile.md5
+#--------------------------------------------------------------------------
+for f in $* 
+do
+   #-----------------------------------------------------------------------
+   # The '-' stands for STDOUT.  So we are diff'ing the contents of the md5
+   # file with the output of the md5sum
+   #-----------------------------------------------------------------------
+   if md5sum $f | awk '{print $1}' | diff - $f.md5
+   then
+      echo $f passed
+   else
+      echo $(hlt)$f FAILED$(hltOff)
+   fi
+done

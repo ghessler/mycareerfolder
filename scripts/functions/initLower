@@ -1,0 +1,10 @@
+# @(#) initCap string capitalizes the first character of string
+#============================================================
+# Function   : initLower 
+# Usage      : initLower <string>
+# Description: Lower-cases the first character of string
+#============================================================
+function initLower
+{
+   echo $(expr "$1" : '\(.\)' | tr [A-Z] [a-z])$(expr "$1" : '.\(.*\)')
+}

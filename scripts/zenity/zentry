@@ -1,0 +1,24 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : zentry
+# Description     : 
+#
+# Revision History: 
+#
+#   15 Jun 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+defaultValue=""
+while getopts :d: option
+do
+   case $option in
+     \?) echo "Bad switch $OPTARG, ignoring";;
+      :) echo "Bad option $OPTARG, ignoring";;
+      d) defaultValue="--entry-text=$OPTARG";;
+   esac
+done
+
+shift $(( OPTIND - 1 ))
+
+zenity --entry $defaultValue --text="$*"

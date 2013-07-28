@@ -1,0 +1,13 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : spellTests
+# Description     : 
+#
+# Revision History: 
+#
+#   22 Feb 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+aspell -a <<< "test"
+aspell -a <<< "linux"

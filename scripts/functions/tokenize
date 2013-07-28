@@ -1,0 +1,13 @@
+# @(#) tokenize splits a string into an array 
+#==========================================================================
+# Function   : tokenize
+# Usage      : tokenize <separatorChar> <string>
+# Description: This function returns a list of tokens separated by <sepChar> 
+#==========================================================================
+function tokenize 
+{
+   local sepChar=$1
+   local string=$2
+
+   echo "$(echo $string | tr $sepChar, ' ')"
+}

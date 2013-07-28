@@ -1,0 +1,38 @@
+# @(#) substr str start len returns the substring of str from start for len char
+#============================================================
+# Function:    substr 
+# Usage   :    substr <string> <start> <length>
+# Description: returns the substring of string starting from position
+#              start for length characters
+#============================================================
+function substr
+{
+   local string=$1
+   local start=$2
+   local len=$3
+   local prePattern
+   local pattern
+   local strLen=$(expr "$string" : '.*')
+
+   if (( start > strLen ))
+   then
+      echo "$string"
+      return
+   fi
+   for i in $(range $(( start - 1 )))
+   do
+      prePattern=".$prePattern"
+   done
+
+   if [[ -z $len ]]
+   then
+      len=$(( strLen - start + 1 ))
+   fi
+
+   for i in $(range $len)
+   do
+      pattern=".$pattern"
+   done
+
+   expr "$string" : "$prePattern\($pattern\)"
+}

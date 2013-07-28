@@ -1,0 +1,18 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : mp4To3
+# Description     : 
+#
+# Revision History: 
+#
+#   14 Sep 2011 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+a=1
+for file in "$@"
+do
+  # echo ffmpeg -i $file -vn -ac ${file%.mp4}.mp3
+  echo ffmpeg -i $file -vn -ac $(( a++ )).mp3
+  ffmpeg -i $file -vn -ac $(( a++ ))
+done

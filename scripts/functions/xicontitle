@@ -1,0 +1,18 @@
+# @(#) xtitle string  chanages the title of the current xterm
+#============================================================
+# Function   : xicontitle
+# Usage      : xicontitle <strings>
+# Description: Changes the icon's title of the current xterm to strings
+#============================================================
+function xicontitle
+{
+   #------------------------------------------------------------
+   # Only change the xterm's icon title if the shell is running in
+   # Interactive mode.
+   #------------------------------------------------------------
+   if [[ $- == *i* ]]
+   then
+      echo -n "]1;$*";   # text in xterm's icon 
+      echo -n "^[]1;$*^G";
+   fi
+}

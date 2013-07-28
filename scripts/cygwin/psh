@@ -1,0 +1,12 @@
+#! /usr/bin/bash
+# @(#) 
+#==========================================================================
+# File            : psh
+# Description     : 
+#
+# Revision History: 
+#
+#   28 Feb 2013 - U-CENTRIPITAL\bmarshall
+#      Initial Version.
+#==========================================================================
+/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe

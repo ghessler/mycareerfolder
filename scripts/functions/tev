@@ -1,0 +1,27 @@
+# @(#) tev  reads from STDIN and shows TABS, non-printable chars and EOLs.
+#============================================================
+# Function:    tev
+# Usage   :    tev 
+# Description: tev is a filter that accepts a file, or by 
+#              default reads from STDIN.  It displays tabs as
+#              ^I, end of lines as '$' and non-printable chars
+#============================================================
+function tev 
+{
+   #---------------------------------------------------
+   # 
+   #---------------------------------------------------
+   OLD_IFS=$IFS
+   IFS=''
+   if (( $# > 0 )) ; then
+      while [[ -n $1 ]] ; do
+         cat -tev $1
+         shift
+      done
+   else
+      while read line ; do
+         echo $line | cat -tev 
+      done
+   fi
+   IFS=$OLD_IFS
+} 

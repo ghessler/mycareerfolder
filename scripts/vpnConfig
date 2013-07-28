@@ -1,0 +1,12 @@
+#! /bin/bash
+# @(#) Configure the VPNClient
+#==========================================================================
+# File            : vpnConfig
+# Description     : 
+#
+# Revision History: 
+#
+#   11 Sep 2011 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+sudo vi /etc/opt/cisco-vpnclient/Profiles/oracle.pcf

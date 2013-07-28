@@ -1,0 +1,25 @@
+#! /bin/bash
+# @(#) list directories
+#==========================================================================
+# File            : lsd
+# Description     : 
+#
+# Revision History: 
+#
+#   17 Apr 2006 - Brian Marshall
+#      Initial Version.
+#==========================================================================
+long=false
+while getopts :l option
+do
+   case $option in
+      l) long=true ;;
+   esac
+done
+
+if [[ $long == true ]]
+then
+   ls -ltr | grep ^d
+else
+   ls -ltr | grep ^d | awk '{print $NF}'
+fi

@@ -1,0 +1,12 @@
+#! /bin/bash
+# @(#) Calculate the IP address of eth0
+#==========================================================================
+# File            : myIPAddr
+# Description     : 
+#
+# Revision History: 
+#
+#   27 Oct 2011 - 
+#      Initial Version.
+#==========================================================================
+ip addr | grep eth0 | grep inet | sed 's/.*inet //' | sed 's/\/.*//'

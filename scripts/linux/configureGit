@@ -1,0 +1,14 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : configureGit
+# Description     : 
+#
+# Revision History: 
+#
+#   14 Aug 2012 - Brian Patrick Marshall,,,
+#      Initial Version.
+#==========================================================================
+git config --global user.name 'Brian Marshall'
+git config --global user.email 'brian.marshall@oracle.com'
+git config --global alias.unstage 'reset HEAD" new Git repository'

@@ -1,0 +1,12 @@
+#! /bin/bash
+# @(#) Echo the color associated with white 
+#==========================================================================
+# File            : white
+# Description     : 
+#
+# Revision History: 
+#
+#   19 Feb 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+echo 47 

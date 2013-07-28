@@ -1,0 +1,12 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : unsetProxy
+# Description     : 
+#
+# Revision History: 
+#
+#   19 Feb 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+unset $(env | grep proxy | cut -d= -f1)

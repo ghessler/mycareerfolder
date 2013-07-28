@@ -1,0 +1,15 @@
+#! /usr/bin/ksh
+. ~/.profile_topo
+
+file=${1:-$(read file?"Enter script name: "; echo $file)}
+time sqlplus -s <<EOF
+oracle/ref
+set timing on
+timing start
+set termout on
+--
+@$file
+set termout off
+timing stop
+exit
+EOF

@@ -1,0 +1,26 @@
+# @(#) altHighlight - altHighlights the passed in data
+#============================================================
+# Function   : altHighlight
+# Usage      : altHighlight <args> or ... | altHighlight 
+# Description: altHighlights the passed in data
+#============================================================
+function altHighlight
+{
+   if (( $# > 0 ))
+   then
+      echo $* | tr ' ' '\n' | altHighlight | xargs echo
+   else
+      i=1
+      while read line
+      do
+         if (( ++i % 2 == 0 ))
+         then
+            hlt
+            echo $line
+            hltOff
+         else
+            echo $line
+         fi
+      done
+   fi
+}

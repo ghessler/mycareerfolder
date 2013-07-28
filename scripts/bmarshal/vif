@@ -1,0 +1,12 @@
+#! /bin/bash
+# @(#) vi the result of a find
+#==========================================================================
+# File            : vif
+# Description     : 
+#
+# Revision History: 
+#
+#   23 May 2009 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+vi $(find . -name "${1}*")

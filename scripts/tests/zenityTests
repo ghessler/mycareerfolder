@@ -1,0 +1,37 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : zenityTests
+# Description     : 
+#
+# Revision History: 
+#
+#   19 Feb 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+zenity --info --title="Demo Progress Script" --text="This script shows how Zenity creates a progress bar."
+
+find ~/bin | zenity --progress --pulsate --auto-close --auto-kill --text="Working..."
+
+zenity --info --title="Job complete" --text="The demo script is now complete."
+
+if zenity -–question -–text=”Do you wish to continue?”
+then
+  echo proceed
+else
+  echo terminated
+fi
+ 
+
+date=`zenity --calendar --date-format=%Y-%m-%d`
+
+echo ${date}
+
+for file in $(find . | zenity --list --title "Select a file" --column "Files" --separator=" " --multiple)
+do
+   echo $file
+done
+
+echo "Your site is $(zenity --entry --text='what is your URL?' --entry-text='default value')"
+
+zenity --info --text='Done computing pi'

@@ -1,0 +1,12 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : createJNIMakefile
+# Description     : 
+#
+# Revision History: 
+#
+#   26 Sep 2011 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+createMakefile -I\$\(JAVA_HOME\)/include -I\$\(JAVA_HOME\)/include/linux $*

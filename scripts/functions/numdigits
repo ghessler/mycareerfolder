@@ -1,0 +1,10 @@
+# @(#) numdigits string retuns the number of digits in string
+#============================================================
+# Function   : numdigits 
+# Usage      : numdigits <string>
+# Description: returns the number of digits in string
+#============================================================
+function numdigits
+{
+   expr "$(echo $1 | tr -cd [0-9])" : "[0-9]*"
+}

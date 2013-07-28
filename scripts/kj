@@ -1,0 +1,27 @@
+#! /bin/bash
+# @(#) Kill Java Processes
+#==========================================================================
+# File            : kj
+# Description     : Kill Java Procs.  
+# Usage           : kj
+#
+# Revision History: 
+#
+#   02 Nov 2011 - 
+#      Initial Version.
+#==========================================================================
+for pid in $(jps | grep -v Jps | awk '{print $1}')
+do
+  if kill $pid
+  then
+    echo "Killed $pid successfully"
+  else
+    echo "Problem killing $pid.  Trying to force"
+    if kill -9 $pid
+    then
+      echo "Killed $1 successfully"
+    else
+      echo "Can't kill $(ps -fp $pid)"
+    fi
+  fi
+done

@@ -1,0 +1,25 @@
+# @(#) Join the passed in arguments into one string delimited by the passed in 
+# @(#) character
+#==============================================================================
+# Function:    join 
+# Usage   :    join [-d delimeter] [params]
+# Description: Join the passed in arguments into one string delimited by the 
+#              passed in 
+#==============================================================================
+function join
+{
+   if [[ $1 == '-d' ]] 
+   then
+      delim=${2:?"Usage $0 [-d delimiter] [file]"}
+      shift 2
+   fi
+  
+   : ${delim:=' '}
+
+   if(( $# > 0 ))
+   then
+      echo $* | sed "s/ /$delim/g"
+   else
+      xargs | sed "s/ /$delim/g"
+   fi
+}

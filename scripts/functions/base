@@ -1,0 +1,10 @@
+# @(#) base b num expresses num in base b
+#============================================================
+# Function:    base
+# Usage   :    base <base> <num>
+# Description: Expresses num in base <base>
+#============================================================
+function base
+{
+   echo -e "obase = $1\n; $2" | bc -l
+}

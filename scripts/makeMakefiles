@@ -1,0 +1,28 @@
+#! /bin/bash
+#==========================================================================
+# File            : makeMakefiles
+# Description     : 
+#
+# Revision History: 
+#
+#   20 Nov 2002 - 
+#      Initial Version.
+#==========================================================================
+startDir=$(pwd)
+
+while getopts :d: option
+do
+   case $option in
+      d) startDir=$OPTARG ;;
+      *) args= "$args $OPTARG" ;;
+   esac
+done
+
+echo for f in find $startDir -type d
+for f in $(find $startDir -type d)
+do    
+	cd $f
+   echo createMakefile in $(tput smso)$(pwd)$(tput rmso)
+   createMakefile $args
+   cd -
+done

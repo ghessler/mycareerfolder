@@ -1,0 +1,29 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : checkPhotos
+# Description     : 
+#
+# Revision History: 
+#
+#   04 Jul 2012 - Brian Patrick Marshall,,,
+#      Initial Version.
+#==========================================================================
+# find . -name "*.jpg" -print0 | tr '\0' '\n' | while read file
+#--------------------------------------------------------------------------
+# -r means don't interpret escaped chars in any special way.
+# -d $'\0' means that the read delimiter is the NULL char, produced by 
+# print0.
+#--------------------------------------------------------------------------
+find . -name "*.jpg" -print0 | while read -r -d $'\0' file
+do
+  echo display "$file"
+  display "$file"
+  continue
+  read -p "Keep? " -n1 answer
+  if [[ $answer != [yY] ]]
+  then
+    echo "Removing $f"
+    # rm "$f"
+  fi
+done

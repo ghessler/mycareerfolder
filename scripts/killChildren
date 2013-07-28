@@ -1,0 +1,14 @@
+#! /bin/bash
+# @(#) Kill the children of the passed in PID
+#==========================================================================
+# File            : killChildren
+# Description     : 
+#
+# Revision History: 
+#
+#   15 Jun 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+pid=${1:?Usage: $0 <Parent PID>}
+
+ps -o pid --no-headers --ppid $pid | xargs kill

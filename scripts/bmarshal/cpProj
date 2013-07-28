@@ -1,0 +1,35 @@
+#! /bin/bash
+# @(#) Copy Eclipse Project
+#==========================================================================
+# File            : cpProj
+# Description     : 
+#
+# Revision History: 
+#
+#   05 Sep 2007 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+workspace=${1:?Usage: $0 <WorkspaceName> <ProjectDirectoryName>}
+project=${2:?Usage: $0 <WorkspaceName> <ProjectDirectoryName>}
+
+if [[ ! -d ~/workspaces/$workspace ]]
+then
+   echo "Workspace $(hlt)$workspace$(hltOff) does NOT exist.  Exiting..."
+   exit
+fi
+
+if [[ ! -d  ~/workspaces/$workspace/$project ]]
+then
+   echo "Project $(hlt)$project$(hltOff) does NOT exist.  Exiting..."
+   exit
+fi
+
+echo "Copying project $project in $workspace"
+
+cd ~/workspaces/$workspace/$project
+cp .classpath{,GOOD}
+
+cd -
+cp -r $project ~/workspaces/$workspace
+chmod -R u+rw ~/workspaces/$workspace
+mv .classpath{GOOD,}

@@ -1,0 +1,12 @@
+#! /bin/bash
+# @(#) Erase an RW CD
+#==========================================================================
+# File            : eraseCD
+# Description     : 
+#
+# Revision History: 
+#
+#   17 Jun 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+wodim dev=/dev/cdrw blank=fast

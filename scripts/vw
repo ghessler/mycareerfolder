@@ -1,0 +1,12 @@
+#! /bin/bash
+# @(#) vi which fileName
+#==========================================================================
+# File            : vw
+# Description     : 
+#
+# Revision History: 
+#
+#   17 Dec 2002 - Brian Marshall
+#      Initial Version.
+#==========================================================================
+vim $(which ${1:?"Usage: $0 <fileName>"})

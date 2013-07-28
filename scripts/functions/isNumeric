@@ -1,0 +1,18 @@
+# @(#) isNumeric string returns success if string is an integer
+#============================================================
+# Function   : isNumeric
+# Usage      : isNumeric <string>
+# Description: returns success if string consists exclusively of digits
+#============================================================
+function isNumeric
+{
+   len=$(length $1)
+   numDigits=$(numdigits $1)
+   [[ $len -eq $numDigits ]]
+#   if (( len == numDigits ))
+#   then
+#      return 0
+#   else
+#      return 1
+#   fi
+}

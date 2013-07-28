@@ -1,0 +1,22 @@
+#! /bin/bash
+# @(#) Create the DBs for a Rails Application
+#==========================================================================
+# File            : createDBs
+# Description     : 
+#
+# Revision History: 
+#
+#   25 Nov 2007 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+dbName=${1:-$(read -p'Enter DBName: ' dbName; echo $dbName)}
+
+cat <<EOF > create$(initCap ${dbName})Databases.sql
+create database ${dbName}_development;
+create database ${dbName}_test;
+create database ${dbName}_production;
+
+grant all on ${dbName}_development.* to 'brian'@'localhost';
+grant all on ${dbName}_test.* to 'brian'@'localhost';
+grant all on ${dbName}_production.* to 'brian'@'localhost';
+EOF

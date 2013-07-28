@@ -1,0 +1,12 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : infoBox
+# Description     : 
+#
+# Revision History: 
+#
+#   15 Jan 2010 - Brian Marshall,,,,
+#      Initial Version.
+#==========================================================================
+dialog --infobox "Processing, please wait" 3 34 ; sleep 5

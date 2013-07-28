@@ -1,0 +1,75 @@
+#!/bin/bash 
+###########################################################################
+# File        : xt
+# Description : Create a number of xterms with semi-random color schemes.
+#               Do this by creating an array of color schemes of your fancy
+#               and randomly choosing an element of this array.
+#
+# Revision History: 
+# TODO: Read /usr/X11R6/share/tcm-2.20/colorrgb.txt for colors.
+#
+# 20 Jan 2001 - Brian Marshall
+#    Initial Version.
+###########################################################################
+#==========================================================================
+#                                    MAIN
+#==========================================================================
+#--------------------------------------------------------------------------
+# Define the colorschemes.  Format:  fgColor bgColor cursorColor.
+# If the cursorColor is not specified, it defaults to black.
+# The syntax declare -a varName defines varName as an array.
+#--------------------------------------------------------------------------
+declare -a colorscheme
+colorscheme=("White DarkOrchid" "White RoyalBlue" "White blue4" "grey30 LawnGreen " "grey35 LightCyan" "AntiqueWhite MidnightBlue" "LightSkyBlue4 seashell1" "aquamarine4 seashell1" "LightSalmon blue3" "white grey35" "NavajoWhite1 maroon" "yellow maroon" "DarkBlue yellow" "grey79 DarkBlue" "azure1 DodgerBlue1" "DarkSlateBlue white"  "CornflowerBlue white" "NavajoWhite1 maroon" "DeepSkyBlue MediumPurple4")
+# colorscheme=("DeepSkyBlue MediumPurple4")
+# colorscheme=("SlateBlue white")
+# colorscheme=("SlateBlue white" "DarkSlateBlue white" "MidnightBlue AntiqueWhite ") #  "CornflowerBlue white")
+# colorscheme=("grey30 LawnGreen yellow" "DarkSlateBlue white yellow" "MediumPurple4 DeepSkyBlue yellow" "grey30 DeepSkyBlue yellow") 
+numColorSchemes=${#colorscheme[*]}
+#--------------------------------------------------------------------------
+# If the first cmd line param is an integer, then create that many xterms.
+# In this case, the xterm's title will be the colorscheme.
+# Otherwise, the first command line arg is the xterm's title (use single 
+# quotes if the title has spaces) and the number of xterms is either the 
+# second command line arg, if it exists, or 1
+#--------------------------------------------------------------------------
+while getopts :t:n:c:i option 
+do
+   case $option in
+     \?) echo "**Invalid option $OPTARG";;
+      :) echo "$OPTARG is missing a parameter";;
+      t) title=$OPTARG;;
+      n) numXTs=$OPTARG;;
+      c) colorNum=$OPTARG;;
+      i) numXTs=3
+         colorNum=0;;
+   esac
+done
+
+for(( i = 0; i < ${numXTs:-1}; ++i )); do
+   #-----------------------------------------------------------------------
+   # Choose a random number between 0 and the number of colorschemes minus
+   # 1.  Use the enviromental variable RANDOM to return a random integer.
+   #-----------------------------------------------------------------------
+   choice=${colorNum:-$(( RANDOM % ${#colorscheme[*]}))}
+   #-----------------------------------------------------------------------
+   # Now randomly choose the foreground field (fgf) to be 0 or 1.  The 
+   # background field will be the other field. The cursor color is the 
+   # third field, if it exists, otherwise 'black' 
+   #-----------------------------------------------------------------------
+   # fgf=$(( RANDOM % 2))
+   # bgf=$(( (( fgf + 1 )) % 2 ))
+   # fg=$(echo ${colorscheme[$choice]} | cut -d' ' -f$fgf)
+   # bg=$(echo ${colorscheme[$choice]} | cut -d' ' -f$bgf)
+
+   bg=$(echo ${colorscheme[$choice]} | cut -d' ' -f1) 
+   fg=$(echo ${colorscheme[$choice]} | cut -d' ' -f2)
+   cr=$(echo ${colorscheme[$choice]} | cut -d' ' -f3)
+#   cr=$(echo ${colorscheme[$choice]} | cut -d' ' -f3) : ${cr:=black} 
+   if [[ -z $title ]]; then
+      title="$fg on $bg"
+   fi
+   echo xterm +tb -title "$title" -ls -sb -sl 10000 -fn fixed -fg $fg -bg $bg -cr $cr
+   xterm -title "$title" -ls -sb -sl 10000 -fn fixed -fg $fg -bg $bg -cr $cr -e '/bin/bash -l'& 
+   colorNum=$(( (colorNum + 1) % numColorSchemes ))
+done

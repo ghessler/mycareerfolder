@@ -1,0 +1,13 @@
+# @(#) random returns a number between the two passed in numbers
+#============================================================
+# Function   : random
+# Usage      : random <minNum> <maxNum>
+# Description: return a random number between minNum and maxNum 
+#============================================================
+function random
+{
+   local min=${1:-0}
+   local max=${2:-10}
+
+   echo $(( $min + RANDOM % $(( max - min )) ))
+}

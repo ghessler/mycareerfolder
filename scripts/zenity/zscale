@@ -1,0 +1,18 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : zscale
+# Description     : 
+#
+# Revision History: 
+#
+#   10 Nov 2012 - Brian Patrick Marshall,,,
+#      Initial Version.
+#==========================================================================
+VALUE=`zenity --scale --text="Select window transparency." --value=50`
+
+case $? in
+         0) echo $VALUE;;
+         1)  echo "No value selected.";;
+        -1) echo "An unexpected error has occurred.";;
+esac

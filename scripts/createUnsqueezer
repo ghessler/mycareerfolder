@@ -1,0 +1,35 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : createUnsqueezer
+# Description     : 
+#
+# Revision History: 
+#
+#   19 Feb 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+fileName=${1:-$(read -p "Enter the unsqueeze file name: "; echo $REPLY)}
+userName=$(grep "^$LOGNAME:" /etc/passwd | cut -d: -f5)
+
+cat <<-EOF > $fileName
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : $fileName
+# Description     : 
+#
+# Revision History: 
+#
+#   $(date +"%d %h %Y") - $userName
+#      Initial Version.
+#==========================================================================
+ARCHIVE=$(awk '/^__ARCHIVE_BELOW__/ {print NR + 1}' $0) 
+
+tail -n +\$ARCHIVE $fileName | <Put your command here> 
+
+exit 0
+__ARCHIVE_BELOW__
+EOF
+chmod +x $fileName
+vi +14 $fileName

@@ -1,0 +1,119 @@
+#! /bin/bash
+# @(#) Install Squid Proxy Server
+#==========================================================================
+# File            : installSquid
+# Description     : 
+#
+# Revision History: 
+#
+#   27 Oct 2011 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+sudo apt-get install sqid ccze
+
+sudo -i
+mkdir -p /home/ncode/cache
+cd /etc/squid/
+cp squid.conf squid.conf.origin
+
+cat <<EOF > squid.conf
+#=============START CONFIGURATION==============
+#==============================================
+# TAG: http_port
+#==============================================
+http_port 3128 transparent
+icp_port 0
+server_http11 on
+
+#==============================================
+# TAG: hierarchy_stoplist
+#==============================================
+hierarchy_stoplist cgi-bin ? localhost
+acl QUERY urlpath_regex cgi-bin \? localhost
+no_cache deny QUERY
+
+cache_mem 1024 MB
+
+maximum_object_size 50 MB
+maximum_object_size_in_memory 128 KB
+
+cache_swap_low 98%
+cache_swap_high 99%
+
+ipcache_size 16384
+fqdncache_size 16384
+
+ipcache_low 98
+ipcache_high 99
+
+#==============================================
+# LOGFILE PATHNAMES AND CACHE DIRECTORIES
+#==============================================
+cache_dir aufs /home/ncode/cache 20400 48 256
+cache_access_log /var/log/squid/access.log
+cache_log none
+cache_store_log none
+mime_table /usr/share/squid/mime.conf
+pid_filename /var/run/squid.pid
+coredump_dir /var/spool/squid/
+log_fqdn off
+log_icp_queries off
+buffered_logs off
+emulate_httpd_log off
+
+#==============================================
+# FTP section
+#==============================================
+ftp_list_width 32
+ftp_passive on
+ftp_sanitycheck on
+
+#==============================================
+# DNS resolution section
+#==============================================
+dns_nameservers 208.67.222.222 208.67.220.220
+
+#==============================================
+# Refresh Rate
+#==============================================
+# refresh_pattern REGEX MIN_MINUTES VALIDITY(%) MAX_MINUTES
+refresh_pattern -i \.(class|css|js|gif|jpg|ps)$ 1440 50% 43200
+refresh_pattern -i \.(jpe|jpeg|png|bmp|tif)$ 1440 50% 43200
+refresh_pattern -i \.(tiff|mov|avi|qt|mpeg|flv|ra|rm|wmv|divx)$ 1440 50% 43200
+refresh_pattern -i \.(mpg|mpe|wav|au|mid|mp3|mp4|ac4|swf)$ 1440 50% 43200
+refresh_pattern -i \.(zip|gz|arj|lha|lzh|7z)$ 1440 50% 43200
+refresh_pattern -i \.(rar|tgz|tar|exe|bin|rpm|iso)$ 1440 50% 43200
+refresh_pattern -i \.(hqx|pdf|rtf|doc|swf|xls|ppt|pdf|docx|xlsx)$ 1440 50% 43200
+refresh_pattern -i \.(inc|cab|ad|txt|dll|dat)$ 1440 50% 43200
+
+refresh_pattern ^ftp: 1440 95% 12960 reload-into-ims
+refresh_pattern ^gopher: 1440 0% 1440
+refresh_pattern . 0 20% 4320
+
+quick_abort_min 0 KB
+quick_abort_max 0 KB
+quick_abort_pct 100%
+
+#==============================================
+# ACL section
+#==============================================
+acl all src 0.0.0.0/0.0.0.0
+acl manager proto cache_object
+acl localnet src $(myIPAddr) 
+acl localhost src 127.0.0.1/255.255.255.255
+acl SSL_ports port 443 563 # https, snews
+acl Safe_ports port 80 81 # http
+acl Safe_ports port 21 # ftp
+acl Safe_ports port 443 563 # https, snews
+acl Safe_ports port 70 # gopher
+acl Safe_ports port 210 # wais
+acl Safe_ports port 1025-65535 # unregistered ports
+acl purge method PURGE
+acl CONNECT method CONNECT
+always_direct allow localnet localhost
+always_direct deny all
+#=============END OF CONFIGURATION==============
+EOF
+
+squid -z
+squid -k reconfigure

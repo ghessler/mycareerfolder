@@ -1,0 +1,12 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : startCassandra
+# Description     : 
+#
+# Revision History: 
+#
+#   14 Mar 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+sudo $CASSANDRA_HOME/bin/cassandra &

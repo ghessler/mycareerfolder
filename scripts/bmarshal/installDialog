@@ -1,0 +1,12 @@
+#! /bin/bash
+# @(#) dialog is used to create simple console uis
+#==========================================================================
+# File            : installDialog
+# Description     : 
+#
+# Revision History: 
+#
+#   15 Jan 2010 - Brian Marshall,,,,
+#      Initial Version.
+#==========================================================================
+sudo apt-get install dialog

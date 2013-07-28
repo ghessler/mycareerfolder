@@ -1,0 +1,12 @@
+#! /bin/bash
+# @(#) increase read/write performance for CD/DVD devices
+#==========================================================================
+# File            : enableDMA
+# Description     : 
+#
+# Revision History: 
+#
+#   05 Dec 2007 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+sudo hdparm -d 1 /dev/hdd

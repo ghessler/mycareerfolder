@@ -1,0 +1,65 @@
+#! /bin/bash
+# @(#) Create Axis2 Web Service from a POJO
+#==========================================================================
+# File            : creAWS
+# Description     : You would like to create a Web Service from a POJO and
+#                   are currently in the bin directory with the packages and
+#                   classes below.
+#
+# Revision History: 
+#
+#   01 Mar 2009 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+function createServiceDirectory
+{
+   fileName=$1
+   echo fileName = $fileName
+   #---------------------------------------------------------------------------#
+   # Replace all occurences of '/' with '.' 
+   #---------------------------------------------------------------------------#
+   className=${fileName//\//.}
+   echo className = $className
+   serviceName=$(basename $fileName)
+   echo ServiceName = $serviceName
+
+   mkdir -p /tmp/$serviceName/{META-INF,lib}
+   cp -r * /tmp/$serviceName
+  
+   read -p "Service Description for $serviceName: " description
+  
+   cat <<-EOF > /tmp/$serviceName/META-INF/services.xml
+<service name="$serviceName" scope="application">
+   <description>$description</description>
+   <messageReceivers>
+      <messageReceiver 
+         mep="http://www.w3.org/2004/08/wsdl/in-only"
+         class="org.apache.axis2.rpc.receivers.RPCInOnlyMessageReceiver"/>
+      <messageReceiver
+        mep="http://www.w3.org/2004/08/wsdl/in-out"
+        class="org.apache.axis2.rpc.receivers.RPCMessageReceiver"/>
+   </messageReceivers>
+   <parameter name="ServiceClass">$className</parameter>
+</service>
+EOF
+
+   #---------------------------------------------------------------------------#
+   # String leading ./
+   #---------------------------------------------------------------------------#
+   cp -r /tmp/$serviceName $CATALINA_HOME/webapps/axis2/WEB-INF/services
+   rm -r /tmp/$serviceName
+}
+#==============================================================================#
+#                                     MAIN
+#==============================================================================#
+for class in $(find . -name "*.class")
+do
+   #---------------------------------------------------------------------------#
+   # String leading ./
+   #---------------------------------------------------------------------------#
+   class=${class#./}
+   #---------------------------------------------------------------------------#
+   # String trailing .class 
+   #---------------------------------------------------------------------------#
+   createServiceDirectory ${class%.class}
+done

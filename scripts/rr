@@ -1,0 +1,14 @@
+#! /usr/bin/bash
+# @(#) Run the program (with supplied args) and change the xtitle
+#==========================================================================
+# File            : rr
+# Description     : 
+#
+# Revision History: 
+#
+#   19 Apr 2013 - U-CENTRIPITAL\bmarshall
+#      Initial Version.
+#==========================================================================
+xtitle "$@"
+
+eval "$@"

@@ -1,0 +1,71 @@
+#! /bin/bash
+# @(#) Deploy the Copernicus Website to OXXUS
+#==========================================================================
+# File            : deploy
+# Description     : 
+#
+# Revision History: 
+#
+#   30 Dec 2004 - Brian Marshall
+#      Initial Version.
+#==========================================================================
+# host=${1:-www.copernicus-corp.com}
+# user=${2:-copernicuscorp@copernicus-corp.com}
+# dir=${3:-/var/www/html/}
+
+host=${1:-localhost}
+user=${2:-brian}
+dir=${3:-/opt/jakarta-tomcat-5.5.4/webapps/Copernicus}
+
+# host=${1:-192.168.0.105}
+# user=${2:-monica}
+# dir=${3:-/cygdrive/d/jakarta-tomcat-5.5.4/webapps/copernicus}
+#--------------------------------------------------------------------------
+# Make sure CVSROOT is set correctly
+#--------------------------------------------------------------------------
+export CVSROOT=~/cvsroot
+
+#--------------------------------------------------------------------------
+# Remove the deploy directory's contents if it exists.  Else just create it
+#--------------------------------------------------------------------------
+if [[ ! -d ~/deploy ]] 
+then
+   echo "Creating ~/deploy"
+   mkdir ~/deploy
+   cd ~/deploy
+else
+   cd ~/deploy && rm -rf *
+fi
+
+#--------------------------------------------------------------------------
+# Now checkout the latest and greatest.  Since this will be deployed, remove
+# the CVS directories
+#--------------------------------------------------------------------------
+cvs checkout copernicusWebsite
+cvs checkout copernicusTools
+find . -name CVS -exec rm -rf {} \;
+
+#--------------------------------------------------------------------------
+# Now create the Training JSPs from the raw files ...
+#--------------------------------------------------------------------------
+cd copernicusTools/bin
+./deploy
+
+#--------------------------------------------------------------------------
+# ... and copy them to the training directory
+#--------------------------------------------------------------------------
+cp ../deploy/*.html ../../copernicusWebsite/WebRoot/training
+
+cd ~/deploy/copernicusWebsite/WebRoot
+
+#--------------------------------------------------------------------------
+# Now tar zip the whole ... 
+#--------------------------------------------------------------------------
+tar zcvf deploy.tgz *
+
+#--------------------------------------------------------------------------
+# ... and send it off 
+#--------------------------------------------------------------------------
+echo scp deploy.tgz $user@$host:$dir
+scp deploy.tgz $user@$host:/tmp
+ssh $user@$host "cd $dir; rm -rf *; cat /tmp/deploy.tgz | tar zxvf - ; # rm /tmp/deploy.tgz"

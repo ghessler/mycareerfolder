@@ -1,0 +1,26 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : awake
+# Description     : 
+#
+# Revision History: 
+#
+#   10 Dec 2007 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+wakeupTime=${1:?Usage: $0 wakeupTime}
+
+while :
+do
+   currentTime=$(date +"%H:%M")
+   if [[ $currentTime == $wakeupTime ]] 
+   then
+      totem "/home/brian/music/Georg Philipp Telemann/Tafelmusik (Musica Amphion) (disc 3)/02 - Tafelmusik, Part II No. 2: Quartet for 2 flutes, recorder, bassoon & continuo in D minor, TWV 43:d1: II. Vivace.ogg"
+      break
+   else
+      clear
+      echo "It is $currentTime.  Sleep until $wakeupTime"
+   fi
+   sleep 10
+done

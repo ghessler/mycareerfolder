@@ -1,0 +1,13 @@
+# @(#) strstr substr string  returns success if substr is a substring of string
+#============================================================
+# Function:    strstr
+# Usage   :    strstr <substring> <string> 
+# Description: returns success if substring is a substring of string
+#============================================================
+function strstr
+{
+   case $1 in
+      *$2* ) return 0;;
+      * )    return 1;;
+   esac
+}

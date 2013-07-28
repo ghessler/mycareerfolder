@@ -1,0 +1,14 @@
+#! /bin/bash
+# @(#) Find the UUID of a partition
+#==========================================================================
+# File            : uuid
+# Description     : 
+#
+# Revision History: 
+#
+#   16 Feb 2008 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+device=${1:?Usage: $0 <device>}
+
+vol_id -u $device

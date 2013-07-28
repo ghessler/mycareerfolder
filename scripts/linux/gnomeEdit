@@ -1,0 +1,12 @@
+#! /bin/bash
+# @(#) Launch the gconf editor
+#==========================================================================
+# File            : gnomeEdit
+# Description     : 
+#
+# Revision History: 
+#
+#   07 Nov 2011 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+sudo gconf-editor

@@ -1,0 +1,12 @@
+# @(#) gotoXY row col places the cursor at the passed in row and column
+#============================================================
+# Function   : gotoXY 
+# Usage      : gotoXY <row> <column>
+# Description: places the cursor at the passed in row and column
+#============================================================
+function gotoXY
+{
+   local row=${1:-0}
+   local col=${2:-0}
+   tput cup $row $col
+}

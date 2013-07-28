@@ -1,0 +1,19 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : startVBoxNW
+# Description     : 
+#
+# Revision History: 
+#
+#   19 Sep 2011 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+tunctl -t tap1 -u
+brctl addbr br0
+ifconfig eth0 0.0.0.0 promisc
+brctl addif br0 eth0
+ifconfig br0 192.168.100.77 netmask 255.255.255.0
+#--- or "dhclient br0" ---- if you use dhcp server on your network
+brctl addif br0 tap1
+ifconfig tap1 up

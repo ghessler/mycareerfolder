@@ -1,0 +1,16 @@
+#! /bin/bash
+# @(#) This shows how to obtain colors
+#==========================================================================
+# File            : rainbow
+# Description     : 
+#
+# Revision History: 
+#
+#   19 Feb 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+for i in {0..255}
+do
+   echo -e "\e[38;05;${i}m Color $i \e[00m"
+done
+

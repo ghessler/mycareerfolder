@@ -1,0 +1,13 @@
+server.url=t3://localhost:8001
+username=weblogic
+password=weblogic
+
+system.module.name=MySystemModule
+
+old.server.name=AdminServer
+old.jms.server.name=Admin_JMSServer
+old.queue.name=Admin_Queue
+
+new.tragated.server.name=AdminServer
+new.jms.server.name=MyJMSServer
+new.queue.name=MyTestQueue

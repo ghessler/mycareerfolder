@@ -1,0 +1,27 @@
+#! /usr/bin/perl
+################################################################
+# File        : showXterm
+# Description : 
+#
+# Revision History: 
+#
+#   10 Aug 1999 - Brian Marshall
+#      Initial Version.
+################################################################
+open(FILE, "/usr/X/lib/X11/rgb.txt") || die($!);
+
+$line = <FILE>;
+
+while(<FILE>)
+{
+	   if( split == 4 )
+	   {
+	      $color = (split)[3];
+	      system("xterm -bg $color -title $color -e /tmp/se &");
+
+	      # <STDIN> if ++$count % 10 == 0;
+	      <STDIN>;
+		}
+}
+
+close(FILE);

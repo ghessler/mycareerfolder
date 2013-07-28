@@ -1,0 +1,56 @@
+#! /bin/bash
+# @(#) Truncate a path if it is too long
+#==========================================================================
+# File            : truncDirName
+# Description     : 
+#
+# Revision History: 
+#
+#   23 Dec 2011 - 
+#      Initial Version.
+#==========================================================================
+#==========================================================================
+# Function: calcLen
+#==========================================================================
+function calcLen
+{
+   local dir=$1
+   local dirLen=${#dir}
+
+   local tokens=($(tokenize / $dir))
+   local numTokens=${#tokens[*]}
+   local lastTokenIndex=$(( $numTokens - 1 ))
+   local lastToken=${tokens[$lastTokenIndex]}
+
+   echo $(( (MAX_LENGTH - ${#lastToken} - numTokens)/(numTokens - 1) ))
+}
+
+#==========================================================================
+#                                  MAIN
+#==========================================================================
+MAX_LENGTH=40
+dir=${1:-$PWD}
+
+if(( ${#dir} > $MAX_LENGTH ))
+then
+   #--------------------------------------------------------------------------
+   # See how the tokenize command is wrapped in parens?  Well that makes tokens
+   # an array, 0 based.  In Bash, ${#tokens[*]} gives its length (wierd, huh?)
+   # and ${tokens[$i]} gives the i-th element of the array.
+   #--------------------------------------------------------------------------
+   len=$(calcLen $dir)
+   tokens=($(tokenize / $dir))
+   numTokens=${#tokens[*]}
+   lastTokenIndex=$(( $numTokens - 1 ))
+   
+   for index in $(seq 0 $(( lastTokenIndex - 1 )) )
+   do
+      token=${tokens[$index]}
+      d="$d/${token:0:$len}"
+   done
+   
+   d="$d/${tokens[$lastTokenIndex]}"
+   echo $d
+else
+   echo $dir
+fi

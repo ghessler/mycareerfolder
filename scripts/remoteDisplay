@@ -1,0 +1,24 @@
+#! /bin/bash
+# @(#) When you ssh into a remote box and the -X option doesn't work ...
+#==========================================================================
+# File            : remoteDisplay
+# Description     : ... use this script to help set DISPLAY
+#
+# Revision History: 
+#
+#   10 Aug 2011 - 
+#      Initial Version.
+#==========================================================================
+localHost=$(ifconfig | grep 'inet addr:' | grep -v 127.0.0.1 | sed 's/.*inet addr://' | sed 's/ .*//')
+remoteHost=$(netstat -an | grep $localHost:22 | awk '{print $5}' | sed 's/:.*//' | sort -u | grep -v 0.0.0.0)
+
+if (( $(echo $remoteHost | wc -w) > 1 ))
+then
+  select display in $remoteHost
+  do
+    remoteHost=$display
+    break
+  done
+fi
+
+echo $remoteHost

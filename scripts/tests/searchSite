@@ -1,0 +1,23 @@
+#! /bin/bash
+# @(#) This is the start of a Script to search sites for CEOs
+#==========================================================================
+# File            : searchSite
+# Description     : 
+#
+# Revision History: 
+#
+#   15 Mar 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+#--------------------------------------------------------------------------
+# This line reads the first command line argument ($1) if it exists, otherwise
+# prompts the user for an http URL
+#--------------------------------------------------------------------------
+startSite=${1:-$(read -p "Enter start website: "; echo $REPLY)}
+echo Searching $startSite
+
+curl $startSite  | grep -i href | sed 's/.*href="//' | sed 's/".*//' | while read site 
+do    
+   read -p "Reading site $site.  Press <RETURN> to continue: "
+   curl $site
+done

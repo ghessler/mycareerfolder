@@ -1,0 +1,13 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : hsqldb
+# Description     : 
+#
+# Revision History: 
+#
+#   27 Aug 2006 - Brian Marshall
+#      Initial Version.
+#==========================================================================
+cd ~/src/sql/hsqldb
+java -cp lib/commons-collections-3.1.jar:lib/commons-logging-1.0.4.jar:lib/hibernate3.jar:lib/hsqldb.jar org.hsqldb.util.DatabaseManager -driver org.hsqldb.jdbcDriver -url jdbc:hsqldb:data/music -user sa

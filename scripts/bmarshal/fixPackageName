@@ -1,0 +1,24 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : fixPackageName
+# Description     : 
+#
+# Revision History: 
+#
+#   14 Apr 2006 - Brian Marshall
+#      Initial Version.
+#==========================================================================
+for dir in $(lsd)
+do
+   mv $dir $(lower $dir)
+   dir=$(lower $dir)
+   cd $dir
+   for java in *.java
+   do
+      sed -i "1i\
+package $dir;\
+\" $java
+   done
+   cd ..
+done

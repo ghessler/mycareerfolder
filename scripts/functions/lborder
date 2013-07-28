@@ -1,0 +1,9 @@
+#==========================================================================
+# Function   : lborder
+# Description: Prepend the passed in text with a border element (#) for easy 
+#              sighting. 
+#==========================================================================
+function lborder
+{
+   echo "# $*"
+}

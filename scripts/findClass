@@ -1,0 +1,215 @@
+#! /bin/bash
+# @(#) Find a class in a colon separated list of directories and jars
+#==========================================================================
+# File            : findClass
+# Description     : Problem: A package needs to be imported in a Java source
+#                   file, but it isn't clear in which package a class resides
+#                   nor in which jar file the package resides.
+#                   This script searches, depth first, a colon or space 
+#                   separated list of directories and jar files for a class.
+#                   Usage: findClass myPackage.myClass dir1 dir2 jar1 jar2 ...
+#
+# Revision History: 
+#
+#   11 Nov 2004 - Brian Marshall
+#      Initial Version.
+#==========================================================================
+#==========================================================================
+# Function: hlt - Turn highlight on 
+#==========================================================================
+function hlt
+{
+   tput smso
+}
+
+#==========================================================================
+# Function: hltOff - Turn highlight off
+#==========================================================================
+function hltOff
+{
+   tput rmso
+}
+
+#==========================================================================
+# Function: absolutePath 
+#==========================================================================
+function absolutePath
+{
+   local file=$1
+
+   if [[  $file != /* ]]
+   then
+      echo "$(pwd)/$file"
+   else
+      echo $file 
+   fi
+}
+
+#==========================================================================
+# Function: usage 
+#==========================================================================
+function usage
+{
+   cat << EOF
+Usage: $0 <className> [optional colon separated list of dirs and jars to search]
+If a second parameter is not provided, the class will be searched in and below the current directory
+Example:  findClass weblogic.message.Message \$CLASSPATH
+          will search for the fully qualified class in \$CLASSPATH
+EOF
+}
+
+#==========================================================================
+# Function: searchInDir 
+#==========================================================================
+function searchInDir
+{
+   local class=$1
+   local dir=${2:-.}
+
+   cd $dir
+
+   for subElem in * 
+   do
+      if [[ $subElem == *.jar && ! -d $subElem ]]
+      then
+         searchInJar $class $subElem
+      elif [[ ${subElem%.class} == ${class} ]]
+      then
+         echo 
+         echo "$(hlt)   ---> Found $class in $subElem in $(pwd)$(hltOff)"
+         echo $(pwd)/$subElem >> ~/classCatalog/find.$class
+      else
+         echo -n 'd' 1>&2
+      fi
+   done
+
+   cd - > /dev/null
+}
+
+#==========================================================================
+# Function: searchInJar 
+#==========================================================================
+function searchInJar
+{
+   local class=$1
+   local jar=$2
+
+   # echo "  --> Executing searchInJar $class $jar"
+
+   if jar tvf $(cygpath -aw "$jar") | grep "[ /]${class}.class" >/dev/null 2>&1
+   then
+      echo 
+      echo "   ---> $(hlt)Found $class in $(cygpath -aw $(pwd)/$jar)$(hltOff)"
+      echo "   ---> Found $class in $(cygpath -aw $(absolutePath $jar))" >> $findFile
+   else
+      echo -n 'j' 1>&2
+   fi
+}
+
+#==========================================================================
+# Function: printFoundClasses 
+#==========================================================================
+function printFoundClasses
+{
+   local class=$1
+   local findFile=$2 
+
+   if [[ -e $findFile ]]
+   then
+      box "$class is found in ..."
+      for token in $(awk '{print $NF}' $findFile | sort -u)
+      do
+         if [[ $token == *.class ]]
+         then
+            echo "  o $token"
+         elif [[ $token == *.jar ]]
+         then
+            echo "  o $token"
+            jar tvf $token | grep "[ /]${class}.class" | while read line
+                                                         do
+                                                            echo "      - $line"
+                                                         done
+         fi
+      done
+   fi
+}
+
+#==========================================================================
+#                               MAIN
+#==========================================================================
+class=${1:?$(usage)}
+shift
+#----------------------------------------------------------------------
+# If no additional command line arguments are specified, then default
+# to the current directory
+#----------------------------------------------------------------------
+path=${*:-$(pwd -P)}
+
+[[ -d ~/classCatalog ]] || mkdir ~/classCatalog
+findFile=~/classCatalog/find.$class
+#----------------------------------------------------------------------
+# Has the class already been found? If so, display the results and
+# possibly break off the search
+#----------------------------------------------------------------------
+if [[ -e $findFile ]]
+then
+   printFoundClasses $class $findFile
+   
+   read -n1 -p "Continue searching for $class?  This can take a while: "
+   if [[ $REPLY != [yY] ]]
+   then
+      exit 0
+   fi
+fi
+#----------------------------------------------------------------------
+# Change pkg.class to pkg/class, and shift the first parameter (the class
+# to be searched for) away.
+# The remaining parameters are colon or space separated directories or jars
+# Remember: In regular expressions, the character '.' represents any character.
+# To search for the literal dot, you must escape it: \.
+#----------------------------------------------------------------------
+class=$(echo $class | sed 's|\.|/|g')
+
+#----------------------------------------------------------------------
+# Replace each colon with a space 
+#----------------------------------------------------------------------
+path=$(echo $path | sed 's/:/ /g')
+#----------------------------------------------------------------------
+# Walk the list of directories and jars. 
+#----------------------------------------------------------------------
+for elem in $path 
+do
+   if [[ ! -e $elem ]]
+   then
+     echo "$(hlt)Skipping $elem.  It DOESN'T EXIST$(hltOff)"
+     continue
+   fi
+   echo "DEBUG: Searching current element: <$elem>"
+   if [[ -d $elem ]]
+   then
+      #----------------------------------------------------------------
+      # Depth first search 
+      #----------------------------------------------------------------
+      for dir in $(find $elem -type d)
+      do
+         searchInDir $class $dir
+      done
+   elif [[ $elem == *.jar ]]
+   then
+      searchInJar $class $elem
+   elif [[ $elem == $class ]]
+   then
+      echo "$(hlt)Found $class in $(pwd)/${class}.class$(hltOff)"
+      echo "Found $class in $(absolutePath ${class}.class)" >> $findFile
+   else
+      echo -n 'f' 1>&2
+   fi
+done
+
+box "Done searching for $class in $path"
+
+if [[ -e $findFile ]]
+then
+   sort -u -o $findFile $findFile
+   printFoundClasses $class $findFile
+fi

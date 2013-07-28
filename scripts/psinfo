@@ -1,0 +1,14 @@
+#! /bin/bash
+# @(#) Find Process Info for the passed in PID
+#==========================================================================
+# File            : psinfo
+# Description     : 
+#
+# Revision History: 
+#
+#   14 Dec 2011 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+pid=${1:?Usage: $0 <PID>}
+
+ps auxwww | grep $pid | grep -v $0 | grep -v "grep $pid"

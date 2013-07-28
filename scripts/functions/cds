@@ -1,0 +1,27 @@
+# @(#) wraps the builtin cd and re-titles the xterm
+#============================================================
+# Function   : cds
+# Usage      : cds [dirName]
+# Description: wraps the cd builtin and re-titles the xterm
+#============================================================
+function cds
+{
+   [[ -n $DEV_ROOT ]] && msg="[devenv.sh]"
+   [[ -n $RESULTS_DIR ]] && msg="[qaenv.sh]"
+   [[ -n $DEV_ROOT && -n $RESULTS_DIR ]] && msg="[devenv.sh qaenv.sh]"
+
+   if [[ -z "$1" ]]
+      then
+         \cd
+   else
+      #------------------------------------------------------
+      # Quote all params, the directory might have spaces ...
+      #------------------------------------------------------
+      \cd "$*"
+   fi
+
+	if [[ $TERM == xterm && $- == *i* ]]
+	then
+      xtitle "$HOSTNAME <${PWD#$HOME/}>  $msg"
+	fi
+}

@@ -1,0 +1,20 @@
+#! /bin/bash
+# @(#) Burn files to CD
+#==========================================================================
+# File            : burnCD
+# Description     : 
+#
+# Revision History: 
+#
+#   17 Dec 2004 - Brian Marshall
+#      Initial Version.
+#==========================================================================
+${1:?"Usage $0 file(s)"}
+mkisofs -o /tmp/tmp$$.iso -J -r -v -V cnip_disk $* 
+# mkisofs -o /tmp/tmp.iso -R -v -V cnip_disk $* 
+
+cd /tmp
+cdrecord -v -eject speed=20 dev=0,0,0 tmp$$.iso 
+
+rm tmp$$.iso
+

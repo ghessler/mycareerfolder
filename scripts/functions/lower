@@ -1,0 +1,10 @@
+# @(#) lower string lowercases the passed in string
+#============================================================
+# Function   : lower 
+# Usage      : lower <string>
+# Description: lowercases string
+#============================================================
+function lower
+{
+   echo $* | tr '[A-Z]' '[a-z]'
+}

@@ -1,0 +1,14 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : convertDateToEpoch
+# Description     : 
+#
+# Revision History: 
+#
+#   17 Jun 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+
+date=$(date)
+echo "Unix Epoch associated with $date is $(date --date "$date" +%s)"

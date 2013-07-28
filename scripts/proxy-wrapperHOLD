@@ -1,0 +1,15 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : proxy-wrapper
+# Description     : 
+#
+# Revision History: 
+#
+#   23 Sep 2011 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+PROXY_IP=www-proxy.us.oracle.com
+PROXY_PORT=80
+
+nc -x${PROXY_IP}:${PROXY_PORT} -X5 $*

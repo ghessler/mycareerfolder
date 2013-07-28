@@ -1,0 +1,14 @@
+#! /usr/bin/bash
+# @(#) 
+#==========================================================================
+# File            : randomColor
+# Description     : 
+#
+# Revision History: 
+#
+#   01 Jul 2013 - U-CENTRIPITAL\bmarshall
+#      Initial Version.
+#==========================================================================
+eval $(perl -le 'sub c { int(rand() * $ENV{RANGE} + $ENV{OFFSET}) }; sub p { printf("%s=#%02x%02x%02x\n", @_) }; @f = (c, c, c); @b = map($_ - $ENV{OFFSET}, @f);  p("FG",@f); p("BG", @b);')
+
+echo $BG

@@ -1,0 +1,14 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : cpSpringJars
+# Description     : 
+#
+# Revision History: 
+#
+#   11 Aug 2012 - Brian Patrick Marshall,,,
+#      Initial Version.
+#==========================================================================
+read -p "Enter directory to copy Spring Jars to: " dir
+
+cp /home/bmarshal/lib/springmvc/* $dir

@@ -1,0 +1,21 @@
+#! /usr/bin/bash
+# @(#) javap on all files in the passed in directory
+#==========================================================================
+# File            : jp
+# Description     : 
+#
+# Revision History: 
+#
+#   13 Feb 2013 - U-CENTRIPITAL\bmarshall
+#      Initial Version.
+#==========================================================================
+dir=${1:-.}
+
+for classFile in ${dir}/*.class
+do   
+   classFile=$classFile
+   classFile=${classFile%.class}
+   class=${classFile//\//.}
+   
+   javap -cp . $class | hlp $classFile | box 
+done

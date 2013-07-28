@@ -1,0 +1,17 @@
+#! /usr/bin/bash
+# @(#) 
+#==========================================================================
+# File            : creFileList
+# Description     : 
+#
+# Revision History: 
+#
+#   13 Mar 2013 - U-CENTRIPITAL\bmarshall
+#      Initial Version.
+#==========================================================================
+baseDir=${1:-.}
+
+for file in $(find . -type f)
+do
+  echo -e "$(basename $file) \t\t $(md5sum $file) \t $file" 
+done

@@ -1,0 +1,67 @@
+#! /bin/bash
+#==========================================================================
+# File        : creant
+# Description : Create Ant script.  Prompt for a filename if one isn't specified
+#               on the command line.  Check if the file exists.  Add the basic
+#               lines to the script and then make it executable
+#
+# Revision History: 
+#
+#   10 Aug 1999 - Brian Marshall
+#      Initial Version.
+#==========================================================================
+#--------------------------------------------------------------------------
+# Get the filename either from the command line if specified or after 
+# prompting the user for it.  Here's how this works: If a command line arg
+# is specified, it is stored in $1.  If this is defined, assign it to
+# fileName.  Otherwise, prompt the user for a fileName (read -p "prompt"),
+# read the user's input into resp and return it.
+#--------------------------------------------------------------------------
+fileName=${1:-$(read -p "Enter fileName: " resp; echo $resp)}
+projectName=${2:-$(read -p "Enter projectName: " resp; echo $resp)}
+defaultTask=${3:-$(read -p "Enter default task: " resp; echo $resp)}
+description=$4
+#--------------------------------------------------------------------------
+# Loop until fileName is not empty (-n) and (-a or &&) a file by that name
+# does not exist (! -e)
+#--------------------------------------------------------------------------
+until [[ -n "$fileName" && ! -e "$fileName" ]]
+do
+   #-----------------------------------------------------------------------
+   # If fileName is empty (-z for zero) the re-prompt the user and start
+   # at the top of the loop again (continue)
+   #-----------------------------------------------------------------------
+   if [[ -z "$fileName" ]]; then
+      read -p "Enter fileName: " fileName
+      continue
+   fi
+   #-----------------------------------------------------------------------
+   # If we get here, the file exists, so ask the user if it should be
+   # overwritten. Here the -n argument specifies 'no new line'.  
+   # getKey is a function which retrieves 1 character from the keyboard. -l
+   # specifies to convert it to lower case (-u upper).  
+   # If the user types 'y' or 'Y', break out of the until loop...
+   # Note: the [[ ]] syntax is exclusively Korn Shell. In the above if 
+   # statement single brackets are used ([ ]), which is Bourne shell syntax
+   #-----------------------------------------------------------------------
+   echo -n "$fileName exists. Overwrite (y/n)? "
+   if [[ $(getKey -l) == 'y' ]] ; then
+      break
+   fi
+   #-----------------------------------------------------------------------
+   # ... otherwise prompt the user for another file name
+   #-----------------------------------------------------------------------
+   echo
+   read -p "Enter fileName: " fileName
+done
+
+cat <<EOF >$fileName
+<?xml version="1.0"?>
+<project name="$projectName" default="$defaultTask">
+  <description>
+    $descriptions 
+  </description>
+</project>
+EOF
+
+vi +3 $fileName

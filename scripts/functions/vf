@@ -1,0 +1,30 @@
+# @(#) Create a new function 
+#==============================================================================
+# Function:    vf 
+# Usage   :    vf <functionName>
+# Description: Creates a new function, whose name is passed in 
+#==============================================================================
+function vf
+{
+   local functionName=$1
+   local pathName=~/bin/functions/$functionName
+
+   if [[ -e $pathName ]]
+   then
+      echo $functionName already exists
+   else
+      cat <<EOF > $pathName
+# @(#) 
+#==============================================================================
+# Function:    $functionName
+# Usage   :    $functionName
+# Description: 
+#==============================================================================
+function $functionName
+{
+
+}
+EOF
+   vi $pathName
+   fi
+}

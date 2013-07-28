@@ -1,0 +1,18 @@
+#! /bin/bash
+# @(#) Create an SQL script to create an SQL Table
+#==========================================================================
+# File            : createTable
+# Description     : 
+#
+# Revision History: 
+#
+#   25 Nov 2007 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+tableName=${1:-$(read -p 'Enter table name: ' tableName; echo $tableName)}
+
+cat <<EOF > create$(initCap $tableName)Table.sql
+create table $tableName
+(
+   id int auto_increment primary key,
+) type='InnoDB';

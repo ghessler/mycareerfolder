@@ -1,0 +1,10 @@
+# @(#) Prompt the user to hit <RETURN> before continuing 
+#==========================================================================
+# Function   : promptToContinue 
+# Usage      : promptToContinue <promptString> 
+#==========================================================================
+function promptToContinue 
+{
+   box "$*"
+   read -p "Press <RETURN> to continue"
+}

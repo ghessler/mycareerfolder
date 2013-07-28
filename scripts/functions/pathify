@@ -1,0 +1,14 @@
+# @(#) Create a colon separated list of jars from a dir
+#============================================================
+# Function   : pathify
+# Usage      : pathify <dir>
+# Description: Create a colon separated string of jars from
+#              all jar files in the past in directory
+#============================================================
+function pathify 
+{
+   local dirs=$*
+
+   absolute $dirs | grep 'jar$' | xargs echo | sed 's/ /:/g'
+}
+

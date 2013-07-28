@@ -1,0 +1,13 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : flm
+# Description     : 
+#
+# Revision History: 
+#
+#   12 May 2006 - Brian Marshall
+#      Initial Version.
+#==========================================================================
+cd /home/brian/src/java/jgoodies/formlayoutmaker/formlayoutmaker-rc8.2.1/dist
+java -jar formLayoutMakerx.jar &

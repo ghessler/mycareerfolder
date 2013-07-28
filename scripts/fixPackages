@@ -1,0 +1,31 @@
+#!  /bin/bash
+# @(#) 
+#==========================================================================
+# File            : fixPackages
+# Description     : 
+#
+# Revision History: 
+#
+#   16 May 2006 - marshabp
+#      Initial Version.
+#==========================================================================
+for javaFile in $(find . -name "*.java")
+do
+   # First get rid of any package name
+   sed -i '/^package/d' $javaFile
+   dir=$(dirname $javaFile)
+   newDir=$(echo $dir | sed 's/-//g')
+   if [[ $newDir != $dir ]]
+   then
+      mv $dir $newDir
+      dir=$newDir
+      javaFile=$(echo $javaFile | sed "s/$dir/$newDir/")
+      echo "Renamed $dir to $newDir"
+   fi
+   pkg=$(echo ${dir#??} |  sed 's/\//./g')
+   sed -i "1i\
+package $pkg;\
+\n"  $javaFile
+   sed -i 's///' $javaFile
+   echo changed $javaFile
+done

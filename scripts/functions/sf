@@ -1,0 +1,20 @@
+# @(#) Source the passed in function or all functions in ~/bin/functions
+#==============================================================================
+# Function:    sf
+# Usage   :    sf
+# Description: Source the passed in function or all functions in ~/bin/functions
+#==============================================================================
+function sf
+{
+   local func=$1
+
+   if [[ -n $func ]]
+   then
+         . ~/bin/$func
+   else
+      for func in ~/bin/functions/*
+      do
+         . $func
+      done
+   fi
+}

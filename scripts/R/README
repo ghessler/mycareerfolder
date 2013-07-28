@@ -1,0 +1,18 @@
+o To create a comparison between msgsRecv per second
+  - cd <runDir>  # along the lines of 2011.11.30_16.44
+  - aggregateAllRuns.sh
+      o This walks all directories R_<Checksummer>_<MsgSize> and calls
+         aggregateRuns.sh <dir>
+         outputMeansTable.sh allRuns_*.out
+         outputFinalResults.R
+    o aggregateRuns.sh <dir>
+       * aggregateRuns.sh <dir>
+           cd's to <dir> and creates one file, allRuns_<dir>.out containing a
+           header and all the run[1-9] data
+       *
+    o outputMeansTable.sh
+       * create a header "Checksummer MsgSize MeanMPS1 ... MeanMPS10 SD1 ...SD10
+       * call aggMeans.R allRuns_*.out
+    o aggregateMeans.R
+       *
+       

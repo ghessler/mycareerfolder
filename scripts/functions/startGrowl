@@ -1,0 +1,15 @@
+#==========================================================================
+# Function  : startGrowl
+#==========================================================================
+function startGrowl
+{
+   #--------------------------------------------------------------------------
+   # Start Growl if it is available and not running.
+   #--------------------------------------------------------------------------
+   if [[ -e /opt/growl/Growl.exe ]] && ! ps -efW | grep -i growl 
+   then
+      echo "$(hlt)Starting Growl$(hltOff)"
+      sleep 1
+      /opt/growl/Growl.exe 1>/dev/null 2>&1 &
+   fi
+}

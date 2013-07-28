@@ -1,0 +1,16 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : downloadFromImgur
+# Description     : 
+#
+# Revision History: 
+#
+#   22 Feb 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+# wget http://i.imgur.com/r6j0p.jpg
+#--------------------------------------------------------------------------
+# -c -> continue... don't download files that already have been downloaded.
+#--------------------------------------------------------------------------
+wget -q -c http://imgur.com/gallery -O -

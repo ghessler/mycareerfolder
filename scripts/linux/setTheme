@@ -1,0 +1,14 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : setTheme
+# Description     : 
+#
+# Revision History: 
+#
+#   09 May 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+gconftool-2 -s --type string /apps/metacity/general/theme "Zukini"
+gconftool-2 -s --type string /desktop/gnome/shell/windows/theme "Zukini"
+gsettings set org.gnome.desktop.interface gtk-theme "Zukini"

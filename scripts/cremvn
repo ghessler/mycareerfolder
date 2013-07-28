@@ -1,0 +1,16 @@
+#! /bin/bash
+# @(#) Create Maven Project
+#==========================================================================
+# File            : cremvn
+# Description     : 
+#
+# Revision History: 
+#
+#   15 Mar 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+groupId=${1:-$(read -p "Enter GroupID: "; echo $REPLY)}
+artifactId=${1:-$(read -p "Enter ArtifactID: "; echo $REPLY)}
+packageName=${1:-$(read -p "Enter PackageName: "; echo $REPLY)}
+
+mvn archetype:create -DgroupId=$groupId -DartifactId=$artifactId -DpackageName=$packageName

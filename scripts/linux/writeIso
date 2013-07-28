@@ -1,0 +1,14 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : writeIso
+# Description     : 
+#
+# Revision History: 
+#
+#   17 Jun 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+image=${1:?"Usage: $0 <imageFile>"} 
+echo wodim dev=/dev/cdrw $image
+wodim dev=/dev/cdrw $image

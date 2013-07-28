@@ -1,0 +1,38 @@
+#! /bin/bash
+# @(#) This shows how to obtain colors
+#==========================================================================
+# File            : rainbow2
+# Description     : 
+#
+# Revision History: 
+#
+#   19 Feb 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+#--------------------------------------------------------------------------
+# The first set of numbers, 30 - 37 changes the foreground color to a light
+# shade of gray, red, green, yellow, blue, purple, azure and white.
+# The second set of numbers, 40 - 47 changes the background color to a light
+# shade of gray, red, green, yellow, blue, purple, azure and white.
+# The third set of numbers, 90 - 97, changes to foreground color to the
+# appropriate color in {40..47}
+# The fourth set of numbers, 100 - 107 changes the background to a brighter
+# version of the same colors.
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+# 1 = bold 
+# 4 = underlined
+# 5 = blinking
+# 7 = reverse video
+# 9 = line-through 
+#--------------------------------------------------------------------------
+for attribute in 1 4 5 7 9
+do
+   for bg in {100..107}
+   do
+      for fg in {90..97}
+      do
+         echo -e "\e[$fg;$bg;${attribute}mCombiniation $fg on $bg with $attribute\e[00m"
+      done
+   done
+done

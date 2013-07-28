@@ -1,0 +1,19 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : tally
+# Description     : 
+#
+# Revision History: 
+#
+#   08 Aug 2012 - Brian Patrick Marshall,,,
+#      Initial Version.
+#==========================================================================
+msgSize=${1?"Usage: $0 <msgSize>"}
+
+msgsSent=$(tail -q -n 1 sender_${msgSize}_*.dat | tr ' ' '\n' | tail -n +2 | xargs | sed 's/ /+/g' | bc)
+
+msgsRecvd=$(tail -q -n 1 receiver_*${msgSize}_*.dat | awk '{print $2}' | xargs | sed 's/ /+/g' | bc)
+
+echo "Sent: $msgsSent, Recvd: $msgsRecvd, delta: $(( msgsSent - msgsRecvd))"
+

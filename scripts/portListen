@@ -1,0 +1,20 @@
+#! /bin/bash
+# @(#) Listen for TCP traffic at an endpoint
+#==========================================================================
+# File            : portListen
+# Description     : 
+#
+# Revision History: 
+#
+#   10 Oct 2011 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+port=${1:?Usage: $0 <port> [host]}
+host=${2:-localhost}
+
+#--------------------------------------------------------------------------
+# -i <interface>
+# -s <snap length> the number of bytes captured from each packet
+# -l - stdout is line buffered
+#--------------------------------------------------------------------------
+sudo tcpdump -i lo -A -s 1024 -l "dst host $host and port $port" | tee /tmp/$host.$port.out

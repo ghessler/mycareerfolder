@@ -1,0 +1,27 @@
+#! /bin/bash
+# @(#) Return the directory a Perl library resides in
+#==========================================================================
+# File            : findLib
+# Description     : Find the directory a Perl Module is located in
+#
+# Revision History: 
+#
+#   18 Nov 2003 - Brian Marshall
+#      Initial Version.
+#==========================================================================
+#--------------------------------------------------------------------------
+# Make sure a parameter has been specified
+#--------------------------------------------------------------------------
+lib=${1:?"Usage: $0 <libName>"}
+#--------------------------------------------------------------------------
+# Change a library of the form Net::FTP to Net/FTP
+#--------------------------------------------------------------------------
+lib="$(echo $lib | sed 's|::|/|g').pm"
+
+for dir in $(perl -e 'print join " ", @INC')
+do
+   if [[ -e $dir/$lib ]]
+   then
+      echo $(hlt)$dir/$lib$(hltOff)
+   fi
+done

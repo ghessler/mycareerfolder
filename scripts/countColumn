@@ -1,0 +1,15 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : countColumn
+# Description     : 
+#
+# Revision History: 
+#
+#   26 Jan 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+colNum=${1:-2}
+file=${2:-$(lf)}
+
+awk "{print \$$colNum}" $file | xargs | sed 's/ /+/g' | bc

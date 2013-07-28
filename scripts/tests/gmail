@@ -1,0 +1,15 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : gmail
+# Description     : 
+#
+# Revision History: 
+#
+#   19 Feb 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+#--------------------------------------------------------------------------
+# -O = option, - is stdout
+#--------------------------------------------------------------------------
+wget --secure-protocol=TLSv1 --user=brian.patr.marshall --password=omsa1456 https://mail.google.com/mail/feed/atom -O - | xmllint --format -

@@ -1,0 +1,30 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : crecolor
+# Description     : 
+#
+# Revision History: 
+#
+#   19 Feb 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+name=$1
+color=$2
+
+cat << EOC > $name
+#! /bin/bash
+# @(#) Echo the color associated with $name 
+#==========================================================================
+# File            : $name
+# Description     : 
+#
+# Revision History: 
+#
+#   19 Feb 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+echo $color 
+EOC
+
+chmod +x $name

@@ -1,0 +1,23 @@
+#! /bin/bash
+#==========================================================================
+# File        : mkTags
+# Description : make tags script.  
+#
+# Revision History: 
+#
+#   Oct 2002 - Jim Colton
+#      Initial Version.
+#==========================================================================
+echo "This will take a minute."
+echo "Run this whenever you think the source code is alot more different "
+echo "than the last time you ran this."
+( cd $HOME;
+/opt/sfw/bin/ctags --langmap=c++:..cc.C.c.cpp.hpp.hpv.cpv.h,java:.java -R `echo $VPATH|cut -f 1,2,3 -d: - | sed 's/:/ /g'` /opt/sfw/include /usr/include
+)
+
+D=$DISPLAY
+if ( ! unset DISPLAY ); then
+    echo "please export the DISPLAY env. var."
+else
+    export DISPLAY=$D
+fi

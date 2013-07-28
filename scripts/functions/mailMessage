@@ -1,0 +1,13 @@
+# @(#) mailMessage mails USER on localhost
+#==========================================================================
+# Function: mailMessage
+#==========================================================================
+function mailMessage
+   {
+   local subject=$1          # the first parameter is the subject
+   shift                     # chuck the subject
+   local message=$(echo $*)  # combine all other parameters into the message
+
+   echo $message | mail -s "$subject" $USER@localhost
+   }
+

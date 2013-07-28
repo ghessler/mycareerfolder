@@ -1,0 +1,27 @@
+# @(#) range start end  returns the list of numbers between start and end
+#============================================================
+# Function:    range
+# Usage   :    range [start] [end]
+# Description: returns the list of numbers between start and end
+#============================================================
+function range
+{
+   typeset lower
+   typeset upper
+   typeset result
+   
+   if [[ $# < 2 ]] ; then
+      lower=1
+      upper=${1:-$((lower + 10))} 
+   else
+      lower=$1
+      upper=$2
+   fi
+
+   while(( lower <= upper )) ; do
+      result="$result $lower"
+      (( lower++ ))
+      done
+   
+   echo $result
+}

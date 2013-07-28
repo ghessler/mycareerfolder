@@ -1,0 +1,161 @@
+#! /bin/bash
+#==========================================================================
+# File        : crech
+# Description : Create Header File script.  Prompt for a filename if one 
+#               isn't specified on the command line.  Check if the file 
+#               exists.
+#
+# Revision History: 
+#
+#   10 Aug 1999 - Brian Marshall
+#      Initial Version.
+#==========================================================================
+
+#--------------------------------------------------------------------------
+# Get the classname either from the command line if specified or after 
+# prompting the user for.  In either case, strip the extesion if there is one
+#--------------------------------------------------------------------------
+fileName=${1:-$(echo -n "Enter fileName: " 1>&2; read resp; echo $resp)}
+
+#--------------------------------------------------------------------------
+# Loop until fileName is not empty (-n) and (-a) a file by that name does
+# not exist (! -e)
+#--------------------------------------------------------------------------
+until [[ -n "$fileName" && ! -e "$fileName" ]]
+do
+   #-----------------------------------------------------------------------
+   # If fileName is empty (-z for zero) the re-prompt the user and start
+   # at the top of the loop again (continue)
+   #-----------------------------------------------------------------------
+   if [[ -z $fileName ]]; then
+      echo -n "Enter fileName: " 1>&2
+      read fileName
+      continue
+   fi
+   #-----------------------------------------------------------------------
+   # If we get here, the file exists, so ask the user if it should be
+   # overwritten. Here the -n argument specifies 'no new line'.  
+   # getKey is a function which retrieves 1 character from the keyboard. -l
+   # specifies to convert it to lower case (-u upper).  
+   # If the user types 'y' or 'Y', break out of the until loop...
+   # Note: the [[ ]] syntax is exclusively Korn Shell. In the above if 
+   # statement single brackets are used ([ ]), which is Bourne shell syntax
+   #-----------------------------------------------------------------------
+   echo -n "$fileName exists. Overwrite (y/n)? "
+   if [[ $(getKey -l) == 'y' ]] ; then
+      break
+   fi
+   #-----------------------------------------------------------------------
+   # ... otherwise prompt the user for another file name
+   #-----------------------------------------------------------------------
+   echo -n "\nEnter fileName: "
+   read fileName
+done
+
+className=$(initCap ${fileName%%.*})
+hFileName=${fileName%%.*}.hpp
+cFileName=${fileName%%.*}.cpp
+
+#--------------------------------------------------------------------------
+# Get the user's name, which is field 5 of the /etc/passwd (GCOS). Do 
+# this by grep'ing for the user's id (id -un on Linux) or login name (LOGNAME)
+# in the /etc/passwd file and then cutting out the fifth colon delimited field
+# Linux: userName=$(grep $(id -un) /etc/passwd | cut -d: -f5)
+#--------------------------------------------------------------------------
+userName=$(grep ^$LOGNAME: /etc/passwd | cut -d: -f5)
+header=$(upper $(echo $fileName | sed 's/\./_/'))
+
+#--------------------------------------------------------------------------
+# An example of a 'here' document.  It says cat (write) to $fileName every
+# thing after the marker EOF and before that same marker.  The '-' (<<-)
+# says that leading tabs are allowed and will be stripped before writing
+# the here document to the file
+#--------------------------------------------------------------------------
+cat > $hFileName <<-EOF
+/*=========================================================================
+|
+| File:        $hFileName
+|
+| Author:      $userName
+|
+| Date:        $(date +"%d %h %Y") 
+|
+| Description: 
+|
++=========================================================================*/
+#ifndef ${header}_INCLUDED
+#define ${header}_INCLUDED
+
+#include <iostream>
+
+class $className
+{
+public:  // methods
+   $className() 
+   { 
+      cout << "$className object " << this << " constructed" << endl;
+   }
+   $className(const $className& lhs) 
+   { 
+      cout << "$className object " << this << " copy constructed" << endl;
+   }
+   virtual ~$className()
+   {
+      cout << "$className object " << this << " destructed" << endl;
+   }
+
+   $className& operator=(const $className& rhs)
+   {
+      return *this; 
+   }
+   friend ostream& operator<<(ostream& os, const $className& rhs)
+   {
+      return os;
+   }
+public:  // attributes
+
+private: // methods
+
+private: // attributes
+};
+
+#endif
+EOF
+
+if [[ ! -e $cFileName ]]
+then
+#--------------------------------------------------------------------------
+# An example of a 'here' document.  It says cat (write) to $cFileName every
+# thing after the marker EOF and before that same marker.  The '-' (<<-)
+# says that leading tabs are allowed and will be stripped before writing
+# the here document to the file
+#--------------------------------------------------------------------------
+cat > $cFileName <<-EOF
+/*=========================================================================
+|
+| File:        $cFileName
+|
+| Author:      $userName
+|
+| Date:        $(date +"%d %h %Y") 
+|
+| Description: 
+|
++=========================================================================*/
+#include <iostream>
+#include "$hFileName"
+
+int main()
+{
+
+}
+EOF
+fi
+#--------------------------------------------------------------------------
+# 'vi +11 fileName' means vi fileName and place the cursor on line 11.
+# We want to place the cursor on the last line of fileName so that the user
+# can immediately start editing the script, so first calculate the number
+# of lines in the file: line=$(wc -l $fileName | awk '{print $1}').  Then
+# exec vi: exec vi +$line $fileName.  These two steps can be combined:
+#--------------------------------------------------------------------------
+exec $EDITOR +$(grep -n class $fileName | sed 's/:.*//') $cFileName $hFileName 

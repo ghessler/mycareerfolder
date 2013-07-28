@@ -1,0 +1,10 @@
+# @(#) clf num cats the newest num files 
+#==========================================================================
+# Function   : clf (cat last files)
+# Usage      : clf <num>
+# Description: cats the news <num> files
+#==========================================================================
+function clf
+{
+   cat $(ls -ltr | grep -v ^d | awk '{print $NF}' | tail -${1:-1})
+}

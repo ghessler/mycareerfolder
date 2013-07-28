@@ -1,0 +1,27 @@
+# @(#) tailStr string len  prints the last len characters of string
+#============================================================
+# Function:    tailStr 
+# Usage   :    tailStr <string> <len> 
+# Description: Prints the last len characters of string
+#============================================================
+function tailStr
+{
+   local string=$1
+   local tailLen=$2
+   # local len=$(expr "$string" : '.*')
+   local len=${#string}
+   local pattern
+
+   if (( tailLen < len ))
+   then
+      for (( i = 0; i < len - tailLen; ++i ))
+      do
+         pattern=".$pattern"
+      done
+
+      expr "$string" : "$pattern\(.*\)"
+      #expr substr "$string" $(( len - tailLen + 1)) $tailLen  
+   else
+      echo $string
+   fi
+}

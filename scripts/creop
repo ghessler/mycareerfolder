@@ -1,0 +1,144 @@
+#! /bin/bash
+#==========================================================================
+# File        : creop 
+# Description : Create Oracle Package.  Prompt for a filename if one isn't 
+#               specified on the command line.  Check if the file exists.
+#               Then create the skeleton of an Oracle Package and edit.
+# Functions used  :
+#                 lower, upper, getKey 
+# Revision History: 
+#
+#   14 Aug 2001 - Brian Marshall
+#      Initial Version.
+#==========================================================================
+#--------------------------------------------------------------------------
+# Get the filename either from the command line if specified or after
+# prompting the user for it
+#--------------------------------------------------------------------------
+fileName=${1:-$(read -p "Enter packageName: " resp; echo $resp)}
+#--------------------------------------------------------------------------
+# Strip any extension from the filename.  Convert the string to upper case
+#--------------------------------------------------------------------------
+pkgName=$(upper $(echo $fileName | sed 's/\..*//'))
+fileName=$(lower $pkgName.sql.txt)
+cursorType=$(echo $pkgName | sed -e 's/PKG_//')_CURSOR_TYP
+cursorVar=$(echo $pkgName | sed -e 's/PKG_//')_CURSOR_VAR
+viewName=$(echo $pkgName | sed -e 's/PKG_SEL/VW/')
+procedureName=$(echo $pkgName | sed -e 's/PKG_//')
+
+#--------------------------------------------------------------------------
+# Loop until fileName is not empty (-n) and (-a) a file by that name does
+# not exist (! -e)
+#--------------------------------------------------------------------------
+until [ -n "$fileName" -a ! -e "$fileName" ]
+do
+   #-----------------------------------------------------------------------
+   # If fileName is empty (-z for zero) the re-prompt the user and start
+   # at the top of the loop again (continue)
+   #-----------------------------------------------------------------------
+   if [ -z "$fileName" ]; then
+      read -p "Enter fileName: " fileName
+      continue
+   fi
+   #-----------------------------------------------------------------------
+   # If we get here, the file exists, so ask the user if it should be
+   # overwritten. Here the -n argument specifies 'no new line'.
+   # getKey is a function which retrieves 1 character from the keyboard. -l
+   # specifies to convert it to lower case (-u upper).
+   # If the user types 'y' or 'Y', break out of the until loop...
+   # Note: the [[ ]] syntax is exclusively Korn Shell. In the above if
+   # statement single brackets are used ([ ]), which is Bourne shell syntax
+   #-----------------------------------------------------------------------
+   echo -n "$fileName exists. Overwrite (y/n)? "
+   if [[ $(getKey -l) = 'y' ]] ; then
+      break
+   fi
+   #-----------------------------------------------------------------------
+   # ... otherwise prompt the user for another file name
+   #-----------------------------------------------------------------------
+   read -p "\nEnter fileName: " fileName
+done
+
+#--------------------------------------------------------------------------
+# Get the user's name, which is field 5 of the /etc/passwd (GCOS). Do
+# this by grep'ing for the user's id (id -un on Linux) or login name (LOGNAME)
+# in the /etc/passwd file and then cutting out the fifth colon delimited field
+# Linux: userName=$(grep $(id -un) /etc/passwd | cut -d: -f5)
+#--------------------------------------------------------------------------
+userName=$(grep ^$LOGNAME: /etc/passwd | cut -d: -f5)
+#--------------------------------------------------------------------------
+# An example of a 'here' document.  It says cat (write) to $fileName every
+# thing after the marker EOF and before that same marker.  The '-' (<<-)
+# says that leading tabs are allowed and will be stripped before writing
+# the here document to the file
+#--------------------------------------------------------------------------
+cat > $fileName <<-EOF
+	/*=========================================================================
+	| File            : $fileName
+	| Description     : 
+	|
+	| Revision History: 
+	|
+	|   $(date +"%d %h %Y") - $userName
+	|      Initial Version.
+	+========================================================================*/
+	drop public synonym $pkgName;	
+
+	create or replace package $pkgName as
+	   type $cursorType is ref cursor return ${viewName}%ROWTYPE;
+	   procedure $procedureName
+	      (
+	      -- add your parameters here
+	      $cursorVar in out $cursorType
+	      );
+	end $pkgName;
+	/
+	show errors
+	
+	create or replace package body $pkgName as
+	   procedure $procedureName
+	      (
+	      -- add your parameters here
+	      $cursorVar in out $cursorType
+	      ) 
+	   as
+	      v_ErrorSeq              NUMBER;
+	      WRK_KEY_INFO            VARCHAR2(250);
+	      WRK_SQLCODE             NUMBER;
+	      WRK_ROWCOUNT            NUMBER;
+	   begin
+	      SP_SET_TRANS('READ', WRK_SQLCODE);
+	      open $cursorVar for
+	                            --- place your select here ---
+	      WRK_SQLCODE  := SQLCODE;
+	      WRK_ROWCOUNT := $cursorName%ROWCOUNT;
+	      SP_END_TRANS('ROLLBACK', WRK_SQLCODE);
+	   exception
+	      when OTHERS then
+	         SP_END_TRANS('ROLLBACK', WRK_SQLCODE);
+	         PKG_ERROR_HANDLER.HandleAll(TRUE);
+	         PKG_ERROR_HANDLER.HandleAll(FALSE);
+	         PKG_ERROR_HANDLER.StoreStacks($pkgName, 
+	                                       WRK_KEY_INFO,
+	                                       v_ErrorSeq,
+	                                       TRUE);
+	         PKG_ERROR_HANDLER.PrintStacks ($pkgName, v_ErrorSeq);
+	   end $procedureName;
+
+	end $pkgName;
+
+
+	create public synonym $pkgName for ORACLE.$pkgName
+	grant execute on $pkgName to DAS_READER;
+	grant execute on $pkgName to DAS_WRITER;
+
+	EOF
+
+#--------------------------------------------------------------------------
+# 'vi +11 fileName' means vi fileName and place the cursor on line 11.
+# We want to place the cursor on the last line of fileName so that the user
+# can immediately start editing the script, so first calculate the number
+# of lines in the file: line=$(wc -l $fileName | awk '{print $1}').  Then
+# exec vi: exec vi +$line $fileName.  These two steps can be combined:
+#--------------------------------------------------------------------------
+exec vi +$(wc -l $fileName | awk '{print $1}') $fileName

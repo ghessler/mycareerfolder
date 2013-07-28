@@ -1,0 +1,13 @@
+# @(#) dereference the passed in variables
+#============================================================
+# Function   : deref 
+# Usage      : deref <varName>
+# Description: 
+#============================================================
+function deref
+{
+   for var
+   do
+      eval echo \$$var
+   done
+}

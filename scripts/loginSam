@@ -1,0 +1,12 @@
+#! /usr/bin/bash
+# @(#) 
+#==========================================================================
+# File            : loginSam
+# Description     : 
+#
+# Revision History: 
+#
+#   26 May 2013 - U-CENTRIPITAL\bmarshall
+#      Initial Version.
+#==========================================================================
+ssh brianpmarshall@expsci.com@shell.expsci.com

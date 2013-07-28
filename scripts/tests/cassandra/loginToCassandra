@@ -1,0 +1,13 @@
+#! /bin/bash
+# @(#) Login to the Cassandra Server
+#==========================================================================
+# File            : loginToCassandra
+# Description     : 
+#
+# Revision History: 
+#
+#   14 Mar 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+host=${1:-localhost}
+$CASSANDRA_HOME/bin/cassandra-cli -h $host

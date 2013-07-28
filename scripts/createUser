@@ -1,0 +1,21 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : createUser
+# Description     : 
+#
+# Revision History: 
+#
+#   25 Jan 2007 - root
+#      Initial Version.
+#==========================================================================
+userName=${1:?"Usage: $0 <userName>"}
+mkdir /home/$userName
+useradd $userName
+echo -e "$userName\n$userName" | passwd $userName
+echo cp -r ~marshalb/bin.tgz /home/$userName
+cp -r ~marshalb/bin.tgz /home/$userName
+cd $_
+tar zxvf bin.tgz
+chown -R $userName:root /home/$userName/{,.bash*}
+chmod -R g+rwx /home/$userName

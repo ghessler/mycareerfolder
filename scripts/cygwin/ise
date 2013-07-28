@@ -1,0 +1,12 @@
+#! /usr/bin/bash
+# @(#) 
+#==========================================================================
+# File            : ise
+# Description     : 
+#
+# Revision History: 
+#
+#   26 Feb 2013 - U-CENTRIPITAL\bmarshall
+#      Initial Version.
+#==========================================================================
+/c/Windows/System32/WindowsPowerShell/v1.0/PowerShell_ISE.exe

@@ -1,0 +1,13 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : lynxTest
+# Description     : 
+#
+# Revision History: 
+#
+#   19 Feb 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+# lynx --dump http://ccmixter.org/view/media/remix
+mplayer "$(lynx --source http://ccmixter.org/view/media/remix | grep mp3 | cut -d\' -f4 | tail -n 1)"

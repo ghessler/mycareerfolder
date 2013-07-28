@@ -1,0 +1,12 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : beanShell
+# Description     : 
+#
+# Revision History: 
+#
+#   25 Oct 2004 - marshabp
+#      Initial Version.
+#==========================================================================
+java -jar /opt/beanshell/bsh-2.0b4.jar

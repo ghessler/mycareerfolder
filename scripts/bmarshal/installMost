@@ -1,0 +1,22 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : installMost
+# Description     : 
+#
+# Revision History: 
+#
+#   15 Jan 2010 - Brian Marshall,,,,
+#      Initial Version.
+#==========================================================================
+#--------------------------------------------------------------------------
+# Install the most command (more, less and now most!).  With this man pages
+# are posted in color
+#--------------------------------------------------------------------------
+sudo apt-get install most
+
+#--------------------------------------------------------------------------
+# Choose which program to use for the pager; choose the option associated
+# with most
+#--------------------------------------------------------------------------
+sudo update-alternatives --config pager

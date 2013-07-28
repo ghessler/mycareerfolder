@@ -1,0 +1,54 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : rxt
+# Description     : 
+#
+# Revision History: 
+#
+#   02 Oct 2012 - Brian Patrick Marshall,,,
+#      Initial Version.
+#==========================================================================
+colorsFile=/etc/X11/rgb.txt
+numColors=$(wc -l $colorsFile | awk '{print $1}')
+echo numColors = $numColors
+row1=$(( RANDOM % numColors ))
+row2=$(( RANDOM % numColors ))
+
+color1=$(sed -n "${row1}p" $colorsFile) 
+echo coord1=$(echo $color1 | awk '{print $1,$2, $3}')
+color1=$(echo $color1 | awk '{print $NF}')
+
+color2=$(sed -n "${row2}p" $colorsFile) 
+echo coord2=$(echo $color2 | awk '{print $1,$2, $3}')
+color2=$(echo $color2 | awk '{print $NF}')
+
+
+echo "($row1, $row2)"
+echo $color1
+echo $color2
+
+echo xterm -fg $color1 -bg $color2 
+xterm -ls -sb -sl 5000 -fg $color1 -bg $color2 &
+exit 0
+# lines=($(</etc/X11/rgb.txt))
+declare -A lines
+count=0
+while read line
+do
+   if echo $line | grep \!
+   then
+      continue
+   fi
+   lines[$count]="$line"
+   : $(( count++ ))
+done < /etc/X11/rgb.txt
+
+numLines=${#lines[*]}
+echo "numLines = $numLines"
+echo ${lines[0]}
+echo ${lines[$(( numLines - 1 ))]}
+fg=$(echo ${lines[$(( $RANDOM % ($numLines) )) ]} | awk '{print $NF}')
+bg=$(echo ${lines[$(( $RANDOM % ($numLines) )) ]} | awk '{print $NF}')
+
+echo "xterm -fg $fg -bg $bg"

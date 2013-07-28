@@ -1,0 +1,27 @@
+# @(#) readm num  reads from STDIN and displays num words per line
+#==========================================================================
+# File            : readm (read multiple)
+# Description     : parse input so that $num tokens are displayed per line
+#
+# Revision History: 
+#
+#   19 Feb 2002 - Brian P. Marshall
+#      Initial Version.
+#==========================================================================
+function readm
+{
+   num=${1:-2}
+   typeset -i i=1
+   for tok in $(while read line; do echo $line; done)
+   do
+      hold="$hold $tok"
+      if(( i % $num == 0 )) ; then
+         echo $hold
+         hold=''
+      fi
+      ((i += 1))
+   done
+   if [[ -n $hold ]] ; then
+      echo $hold
+   fi
+}

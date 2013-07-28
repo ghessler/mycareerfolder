@@ -1,0 +1,9 @@
+# @(#) Start an R block 
+#==========================================================================
+# Function   : StartR 
+# Usage      : $(StartR) R code EndR 
+#==========================================================================
+function StartR 
+{
+   echo 'R --quiet --no-save --vanilla --slave'
+}

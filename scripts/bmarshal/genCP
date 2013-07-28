@@ -1,0 +1,12 @@
+#! /bin/bash
+# @(#) Generate CLASSPATH
+#==========================================================================
+# File            : genCP
+# Description     : 
+#
+# Revision History: 
+#
+#   08 Sep 2007 - 
+#      Initial Version.
+#==========================================================================
+find . -name "*.jar" | xargs | sed 's/ /:/g'

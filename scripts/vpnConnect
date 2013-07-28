@@ -1,0 +1,12 @@
+#! /bin/bash
+# @(#) Connect to Oracle's VPN
+#==========================================================================
+# File            : vpnConnect
+# Description     : 
+#
+# Revision History: 
+#
+#   11 Sep 2011 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+sudo /opt/cisco-vpnclient/bin/vpnclient connect oracle 

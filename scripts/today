@@ -1,0 +1,29 @@
+#!/usr/bin/perl
+# today - print out last month, this month, and next month from
+#         cal program, with today in reverse video (vt100 hardcoded)
+#
+# shows good use of pipes
+
+$SO = "\033[7m";
+$SE = "\033[m";
+
+($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+$mon++;                 # 0 based
+$year += 1900;
+# select next year and prev year "wrapping" at 12 months
+$nmon = $mon + 1; $nyear = $year; if ( $nmon == 13 ) { $nmon =  1; $nyear++; }
+$pmon = $mon - 1; $pyear = $year; if ( $pmon ==  0 ) { $pmon = 12; $pyear--; }
+
+open ( prev, "cal $pmon $pyear |" );
+open ( cur, "cal $mon $year |" );
+open ( foll, "cal $nmon $nyear |" );
+
+until (eof(prev) && eof(cur) && eof(foll)) {
+    chop($prev = <prev>);
+    chop($foll = <foll>);
+    chop($cur = <cur>); 
+    $len = 22; 
+    ($cur =~ s/\b$mday\b/$SO$mday$SE/) && ($len += 7);
+#    $cur =~ s/\b$mday\b/$SO$mday$SE/;
+    printf (sprintf("%%-20s   %%-%ds   %%-20s\n", $len), $prev, $cur, $foll);
+} 

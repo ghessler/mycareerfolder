@@ -1,0 +1,28 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : installQSTK
+# Description     : 
+#
+# Revision History: 
+#
+#   10 Nov 2012 - Brian Patrick Marshall,,,
+#      Initial Version.
+#==========================================================================
+sudo apt-get update
+sudo apt-get upgrade
+
+sudo apt-get install git-core
+sudo apt-get install python-numpy
+sudo apt-get install python-scipy
+sudo apt-get install python-matplotlib
+sudo apt-get install python-dev
+sudo apt-get install python-setuptools
+sudo easy_install -U scikits.statsmodels
+sudo easy_install --upgrade pytz
+sudo apt-get install python-dateutil
+sudo easy_install pandas==0.7.3
+sudo apt-get install python-qt4
+sudo apt-get build-dep python-cvxopt
+sudo apt-get install python-cvxopt
+

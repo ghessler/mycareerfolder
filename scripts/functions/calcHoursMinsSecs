@@ -1,0 +1,9 @@
+#==========================================================================
+# Function: calcHoursMinsSecs
+#==========================================================================
+function calcHoursMinsSecs
+{
+   local timeElapsed=$1
+
+   echo "$(( timeElapsed/3600 )) hours $(( (timeElapsed % 3600)/60 )) minutes $(( (timeElapsed % 3600) % 60 )) seconds"
+}

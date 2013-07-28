@@ -1,0 +1,17 @@
+#! /usr/bin/bash
+# @(#) Copy all "new" files to another directory
+#==========================================================================
+# File            : treecp
+# Description     : 
+#
+# Revision History: 
+#
+#   20 Jun 2013 - U-CENTRIPITAL\bmarshall
+#      Initial Version.
+#==========================================================================
+min=${1:-60}
+destinationDirectory=${2:-$(read -p "Enter destination directory: "; echo $REPLY)}
+echo "Copying all files newer than $min minutes to $destinationDirectory"
+
+find -type f -mmin -$min | xargs tar cvf - | (cd $destinationDirectory; tar xvf -)
+

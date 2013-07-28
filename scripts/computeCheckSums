@@ -1,0 +1,21 @@
+#! /usr/bin/bash
+# @(#) ... to help find what files changed
+#==========================================================================
+# File            : computeCheckSums
+# Description     : 
+#
+# Revision History: 
+#
+#   19 Feb 2013 - U-CENTRIPITAL\bmarshall
+#      Initial Version.
+#==========================================================================
+for dir in $(lsd)
+do       
+   box "Computing MD5Sums in $dir"
+   [[ -e md5sums.$dir ]] && rm md5sums.$dir 
+   for file in $(find $dir -type f)
+   do            
+      md5sum $file >> md5sums.$dir
+      echo -n .
+   done
+done

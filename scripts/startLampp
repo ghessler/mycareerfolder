@@ -1,0 +1,15 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : startLampp
+# Description     : 
+#
+# Revision History: 
+#
+#   18 Mar 2012 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+sudo service apache2 stop
+sudo service mysql stop
+
+sudo /opt/lampp/lampp start

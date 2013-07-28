@@ -1,0 +1,11 @@
+# @(#) length string returns the length of the passed in string
+#============================================================
+# Function   : length 
+# Usage      : length <string>
+# Description: returns the length of string
+#============================================================
+function length
+{
+   expr "$1" : '.*'
+}
+

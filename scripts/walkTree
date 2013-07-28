@@ -1,0 +1,27 @@
+#! /bin/bash
+#==========================================================================
+# File            : walkTree
+# Description     : This simple script accepts a startDir, a scriptname and
+#                   a pattern (in the form of a quoted glob string).  The tree
+#                   beneath the startDirectory is walked and script (second
+#                   param) is called for each ordinary file that matches the
+#                   pattern.  The script passed in as a second param can be
+#                   any executable that takes a filename as a parameter.
+#                   If no pattern is specified, it defaults to '*'.
+# Usage           : walkTree <startDir> <scriptName> <pattern>
+# Examples        : walkTree $SRC_ROOT 'ls -l' '*.bak'
+#                   walkTree $SRC_ROOT removePragma '*.h??'
+#
+# Revision History: 
+#
+#   31 Oct 2002 - 
+#      Initial Version.
+#==========================================================================
+startDir=${1:?"Usage: $0 <startDirectory>"}
+script=${2:?"Usage: $0 <startDirectory> <scriptName> <pattern>"}
+pattern=${3:-'*'}
+
+#--------------------------------------------------------------------------
+# only operate on ordinary files
+#--------------------------------------------------------------------------
+find $startDir -type f -name "$pattern" -exec $script {} \;

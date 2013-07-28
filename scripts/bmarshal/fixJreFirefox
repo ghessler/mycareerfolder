@@ -1,0 +1,15 @@
+#! /bin/bash
+# @(#) 
+#==========================================================================
+# File            : fixJreFirefox
+# Description     : 
+#
+# Revision History: 
+#
+#   20 Oct 2007 - Brian Marshall,,,
+#      Initial Version.
+#==========================================================================
+cd /opt/firefox/plugins
+rm libjavaplugin_oji.so
+# ln -s  $JAVA_HOME/jre/plugin/i386/ns7-gcc29/libjavaplugin_oji.so
+ln -s /opt/java/currentJRE/plugin/i386/ns7-gcc29/libjavaplugin_oji.so

@@ -1,0 +1,17 @@
+#! /bin/bash
+# @(#) am asciifies a man page (for printing it, for example)
+#==========================================================================
+# File            : am (asciify man)
+# Description     : A man page has control characters used to format its 
+#                   output.  This program strips those control characters
+#                   so that a man page can be redirected to a file for viewing.
+#
+# Revision History: 
+#
+#   26 Feb 2003 - Brian Marshall
+#      Initial Version.
+#==========================================================================
+#--------------------------------------------------------------------------
+# sws (squeeze white space) is a function that removes duplicate white spac3
+#--------------------------------------------------------------------------
+man ${1:?Usage: $0 <manTopic>} | col -b | sws

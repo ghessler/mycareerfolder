@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<family>
+  <dad>
+    <name age="55">Brian</name>
+  </dad>
+  <kids>
+    <child age="23">
+      <name>Giulia</name>
+    </child>
+    <child age="20">
+      <name>Martin</name>
+    </child>
+    <child age="19">
+      <name>Sylvia</name>
+    </child>
+  </kids>
+</family>
