@@ -15,7 +15,7 @@ public class SchmemaExporter
    public static void main(String[] args)
    {
       Configuration config = new Configuration();
-
+      
       Properties properties = new Properties();
 
       properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
@@ -28,6 +28,10 @@ public class SchmemaExporter
 
       SchemaExport schemaExport = new SchemaExport(config);
       schemaExport.setDelimiter(";");
+      /*
+       * Write the DDL (Data Definition Language) file to the sql directory
+       */
+      schemaExport.setOutputFile("src/main/resources/sql/contactDDL.sql");
 
       /**Just dump the schema SQLs to the console , but not execute them ***/
       schemaExport.create(true, false);
