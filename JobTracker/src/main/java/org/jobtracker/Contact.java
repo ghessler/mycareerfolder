@@ -41,13 +41,6 @@ public class Contact
       return contactId;
    }
    /**
-    * @param contactId the contactId to set
-    */
-   public void setContactId(int contactId)
-   {
-      this.contactId = contactId;
-   }
-   /**
     * @return the userId
     */
    public int getUserId()
