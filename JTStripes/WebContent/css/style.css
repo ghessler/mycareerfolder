@@ -1,0 +1,70 @@
+/* General settings */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: #FFFFFF;
+}
+body, td, th {
+  color: #FFD700;
+  font-family: "Luxi Sans", Arial, sans-serif;
+  font-size: 10pt;
+}
+body {
+  background-color: #6495ED;
+}
+a, a:visited {
+  color: #FFFF00;
+}
+/* Layout */
+#header, #body {
+  padding: 8px;
+}
+#header {
+  background-color: #191970;
+}
+#header {
+  border-bottom: 2px solid #EECCAA;
+}
+span.title {
+  color: #FFFF00;
+  font-size: large;
+  font-weight: bold;
+}
+/* Tables */
+table {
+  border-collapse: collapse;
+}
+th, td {
+  border: 1px solid #FFFF00;
+  padding-left:  4px;
+  padding-right: 4px;
+}
+th {
+  background-color: #00008B;
+  border-bottom: 3px solid #777777;
+}
+td {
+  background-color: #191970;	
+  color : #FFFFFF;
+}
+/* Display Tag */
+/* START:odd_even */
+tr.odd {
+  background-color: #E5F5E5;
+}
+tr.even {
+  background-color: #FFFFFF;
+}
+/* END:odd_even */
+/* START:sortable_headers */
+th.sorted {
+  background-color: #4169E1;
+}
+th.order1 {
+  background-image: url(../images/gradient_asc.png);
+}
+th.order2 {
+  background-image: url(../images/gradient_desc.png);
+}
+/* END:sortable_headers */
