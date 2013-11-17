@@ -23,6 +23,7 @@ public class ContactListActionBean extends BaseActionBean
    private static final String VIEW = "/WEB-INF/jsp/contact_view.jsp";
 
    private Integer contactId;
+   private Contact contact;
    private ContactDao contactDao = JPAContactDao.getInstance(); 
 
    /**
@@ -63,6 +64,14 @@ public class ContactListActionBean extends BaseActionBean
    public Contact getContact()
    {
       return contactDao.read(contactId);
+   }
+
+   /**
+    * @param contact the contact to set
+    */
+   public void setContact(Contact contact)
+   {
+      this.contact = contact;
    }
 
    public List<Contact> getContacts()

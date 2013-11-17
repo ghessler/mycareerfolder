@@ -6,6 +6,7 @@ import java.util.Properties;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.springsTeam.model.Contact;
+import org.springsTeam.model.Document;
 
 /**
  * @author SpringTeam for questions and corrections
@@ -26,6 +27,7 @@ public class SchmemaExporter
       config.setProperties(properties);
 
       config.addAnnotatedClass(Contact.class);
+      config.addAnnotatedClass(Document.class);
 
       SchemaExport schemaExport = new SchemaExport(config);
       schemaExport.setDelimiter(";");

@@ -15,5 +15,6 @@
     <property name="hibernate.show_sql">false</property>
     <!-- "Import" the mapping resources here -->
     <mapping class="org.springsTeam.model.Contact"/>
+    <mapping class="org.springsTeam.model.Document"/>
   </session-factory>
 </hibernate-configuration>

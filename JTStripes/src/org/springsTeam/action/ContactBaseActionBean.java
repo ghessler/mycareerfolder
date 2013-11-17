@@ -1,5 +1,8 @@
 package org.springsTeam.action;
 
+import net.sourceforge.stripes.validation.Validate;
+import net.sourceforge.stripes.validation.ValidateNestedProperties;
+
 import org.springsTeam.dao.ContactDao;
 import org.springsTeam.dao.jpa.JPAContactDao;
 import org.springsTeam.model.Contact;
@@ -11,6 +14,9 @@ import org.springsTeam.model.Contact;
 public abstract class ContactBaseActionBean extends BaseActionBean
 {
    private Integer contactId;
+//   @ValidateNestedProperties({
+//      @Validate(field="id", required=true)
+//      })
    private Contact contact;
    private ContactDao contactDao = JPAContactDao.getInstance();
    

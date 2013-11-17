@@ -4,7 +4,6 @@ package org.springsTeam.dao.jpa;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.Session;
 import org.springsTeam.dao.ContactDao;
 import org.springsTeam.model.Contact;
 
@@ -13,9 +12,8 @@ import org.springsTeam.model.Contact;
  * @author SpringTeam for questions and corrections
  *
  */
-public class JPAContactDao implements ContactDao
+public class JPAContactDao extends JTDao implements ContactDao
 {
-   private Session session = JobTrackerPersistenceManager.getFactory().openSession();
    private static JPAContactDao instance = new JPAContactDao();
    
    /**
@@ -49,7 +47,14 @@ public class JPAContactDao implements ContactDao
    public void save(Contact contact)
    {
       session.beginTransaction();
-      session.save(contact);
+      if( contact.getId() == null )
+      {
+         session.save(contact);
+      }
+      else
+      {
+         session.update(contact);
+      }
       session.getTransaction().commit();
    }
 
@@ -61,5 +66,4 @@ public class JPAContactDao implements ContactDao
       session.delete(contact);
       session.getTransaction().commit();
    }
-
 }

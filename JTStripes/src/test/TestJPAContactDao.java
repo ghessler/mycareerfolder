@@ -16,7 +16,7 @@ public class TestJPAContactDao
    @Test
    public void testConnect()
    {
-      JPAContactDao dao = new JPAContactDao();
+      JPAContactDao dao = JPAContactDao.getInstance();
 
       List<Contact> contacts = dao.read();
       

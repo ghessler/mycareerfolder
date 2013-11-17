@@ -6,7 +6,7 @@ html, body {
   background-color: #FFFFFF;
 }
 body, td, th {
-  color: #FFD700;
+  color: #FFFFFF;
   font-family: "Luxi Sans", Arial, sans-serif;
   font-size: 10pt;
 }
@@ -22,8 +22,6 @@ a, a:visited {
 }
 #header {
   background-color: #191970;
-}
-#header {
   border-bottom: 2px solid #EECCAA;
 }
 span.title {
@@ -48,16 +46,14 @@ td {
   background-color: #191970;	
   color : #FFFFFF;
 }
-/* Display Tag */
-/* START:odd_even */
 tr.odd {
-  background-color: #E5F5E5;
+  background-color: #000033;
+  color : #FFFFFF;
 }
 tr.even {
-  background-color: #FFFFFF;
+  background-color: #003333;
+  color : #FFFFFF;
 }
-/* END:odd_even */
-/* START:sortable_headers */
 th.sorted {
   background-color: #4169E1;
 }
@@ -67,4 +63,3 @@ th.order1 {
 th.order2 {
   background-image: url(../images/gradient_desc.png);
 }
-/* END:sortable_headers */
