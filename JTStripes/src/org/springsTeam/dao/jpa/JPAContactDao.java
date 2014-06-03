@@ -53,7 +53,8 @@ public class JPAContactDao extends JTDao implements ContactDao
       }
       else
       {
-         session.update(contact);
+         Object contactN = session.merge(contact);
+         session.saveOrUpdate(contactN);
       }
       session.getTransaction().commit();
    }
