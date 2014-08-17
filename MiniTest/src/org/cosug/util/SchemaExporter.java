@@ -5,6 +5,7 @@ import java.util.Properties;
 
 import org.cosug.model.Document;
 import org.cosug.model.Person;
+import org.cosug.model.Task;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 
@@ -16,13 +17,18 @@ public class SchemaExporter
 {
    public static void main(String[] args)
    {
-      Configuration config = new Configuration();
+
+	  Configuration config = new Configuration();
       
       Properties properties = new Properties();
 
+<<<<<<< HEAD
       properties.put("hibernate.connection.url", "jdbc:mysql://10.255.251.58:3306/osug"); 
+=======
+      properties.put("hibernate.connection.url", "jdbc:mysql://localhost:3306/osug"); 
+>>>>>>> 21975f1... all in
       properties.put("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
-      properties.put("hibernate.connection.username", "osug");
+      properties.put("hibernate.connection.username", "root");
       properties.put("hibernate.connection.password", "feelfree");
       properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
       properties.put("hibernate.show_sql", "true");
@@ -30,6 +36,7 @@ public class SchemaExporter
 
       config.addAnnotatedClass(Person.class);
       config.addAnnotatedClass(Document.class);
+      config.addAnnotatedClass(Task.class);
 
       SchemaExport schemaExport = new SchemaExport(config);
       schemaExport.setDelimiter(";");
