@@ -4,8 +4,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import javax.persistence.Entity;
-
 /**
  * @author SpringsTeam
  *
