@@ -1,4 +1,8 @@
+.project
+*.log
+
 *.class
+MiniTest/build
 
 JobTracker/target
 JobTracker/target/*
