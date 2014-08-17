@@ -2,22 +2,22 @@ package org.cosug.action;
 
 import java.util.List;
 
-import org.cosug.dao.DocumentDAO;
-import org.cosug.model.Document;
-
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
+
+import org.cosug.dao.DAO;
+import org.cosug.model.Document;
 
 public class DocumentListActionBean extends BaseActionBean
 {
    private static final String DOCUMENT_LIST_URL = "/WEB-INF/jsp/documentList.jsp";
-   
+   private DAO<Document> documentDAO = new DAO<>(Document.class.getName());
    /**
     * @return the persons
     */
    public List<Document> getDocuments()
    {
-      return DocumentDAO.read();
+      return documentDAO.read();
    }
 
    public Resolution showDocuments()

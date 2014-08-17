@@ -5,8 +5,8 @@ import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 
+import org.cosug.dao.DAO;
 import org.cosug.dao.DBError;
-import org.cosug.dao.DocumentDAO;
 import org.cosug.model.Document;
 import org.cosug.util.OperationCount;
 
@@ -19,6 +19,7 @@ public class DocumentFormActionBean extends BaseActionBean
    private static final String DOCUMENT_FORM_URL = "/WEB-INF/jsp/documentForm.jsp";
    private int id;
    private Document document;
+   private DAO<Document> documentDAO = new DAO<Document>(Document.class.getName());
 
    /**
     * @return the id
@@ -40,7 +41,7 @@ public class DocumentFormActionBean extends BaseActionBean
       OperationCount.reset();
       System.out.printf("Operation: %02d DocumentFormActionBean.setID()\n", OperationCount.count());
       this.id = id;
-      this.document = DocumentDAO.read(id);
+      this.document = documentDAO.read(id);
    }
 
    /**
@@ -67,7 +68,7 @@ public class DocumentFormActionBean extends BaseActionBean
       System.out.printf("Operation: %02d DocumentFormActionBean.saveDocument()\n", OperationCount.count());
       try
       {
-         DocumentDAO.save(document);
+         documentDAO.save(document);
          getContext().getMessages().add(new SimpleMessage("{0} has been saved.", document.getTitle()));
       }
       catch( DBError e )
@@ -93,7 +94,7 @@ public class DocumentFormActionBean extends BaseActionBean
    public Resolution deleteDocument() throws DBError
    {
       System.out.printf("Operation: %02d DocumentFormActionBean.deleteDocument()\n", OperationCount.count());
-      DocumentDAO.remove(document);
+      documentDAO.remove(document);
       return new RedirectResolution(DocumentListActionBean.class);
    }
 

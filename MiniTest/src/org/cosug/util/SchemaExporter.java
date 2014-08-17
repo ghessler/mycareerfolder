@@ -20,7 +20,7 @@ public class SchemaExporter
       
       Properties properties = new Properties();
 
-      properties.put("hibernate.connection.url", "jdbc:mysql://192.168.56.1:3306/osug"); 
+      properties.put("hibernate.connection.url", "jdbc:mysql://10.255.251.58:3306/osug"); 
       properties.put("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
       properties.put("hibernate.connection.username", "osug");
       properties.put("hibernate.connection.password", "feelfree");

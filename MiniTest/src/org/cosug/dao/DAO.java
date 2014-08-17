@@ -23,6 +23,19 @@ public class DAO<T>
    private static SessionFactory sessionFactory = SessionFactoryInstance.sessionFactory();
    private static Session session = sessionFactory.openSession();
    private List<T> ts = new ArrayList<>();
+   private Class<T> clazz;
+   
+   public DAO(String className)
+   {
+      try
+      {
+         clazz = (Class<T>) Class.forName(className);
+      }
+      catch( ClassNotFoundException e )
+      {
+         throw new DAOInitializationException(e);
+      }
+   }
    /**
     * @return
     */
@@ -36,7 +49,7 @@ public class DAO<T>
 //         session = sessionFactory.openSession();
          transaction = session.beginTransaction();
          
-         Criteria criteria = session.createCriteria(Person.class);
+         Criteria criteria = session.createCriteria(clazz);
          ts = criteria.list();
          
          transaction.commit();
@@ -65,7 +78,7 @@ public class DAO<T>
 //         session = sessionFactory.openSession();
          transaction = session.beginTransaction();
          
-         contact = (T) session.load(Person.class, id);
+         contact = (T) session.load(clazz, id);
          
          transaction.commit();
       }

@@ -5,8 +5,8 @@ import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 
+import org.cosug.dao.DAO;
 import org.cosug.dao.DBError;
-import org.cosug.dao.PersonDAO;
 import org.cosug.model.Person;
 import org.cosug.util.OperationCount;
 
@@ -19,6 +19,7 @@ public class PersonFormActionBean extends BaseActionBean
    private static final String PERSON_FORM_URL = "/WEB-INF/jsp/personForm.jsp";
    private int id;
    private Person person;
+   private DAO<Person> personDAO = new DAO<Person>(Person.class.getName());
 
    /**
     * @return the id
@@ -40,7 +41,7 @@ public class PersonFormActionBean extends BaseActionBean
       OperationCount.reset();
       System.out.printf("Operation: %02d PersonFormActionBean.setID()\n", OperationCount.count());
       this.id = id;
-      this.person = PersonDAO.read(id);
+      this.person = personDAO.read(id);
    }
 
    /**
@@ -67,7 +68,7 @@ public class PersonFormActionBean extends BaseActionBean
       System.out.printf("Operation: %02d PersonFormActionBean.savePerson()\n", OperationCount.count());
       try
       {
-         PersonDAO.save(person);
+         personDAO.save(person);
          getContext().getMessages().add(new SimpleMessage("{0} has been saved.", person.getName()));
       }
       catch( DBError e )
@@ -93,7 +94,7 @@ public class PersonFormActionBean extends BaseActionBean
    public Resolution deletePerson() throws DBError
    {
       System.out.printf("Operation: %02d PersonFormActionBean.deletePerson()\n", OperationCount.count());
-      PersonDAO.remove(person);
+      personDAO.remove(person);
       return new RedirectResolution(PersonListActionBean.class);
    }
 
